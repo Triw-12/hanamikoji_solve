@@ -7,13 +7,14 @@ Problématique : Peut-t-on trouver une stratégie optimale pour jouer au jeu de 
 * Règles
 * Calculs des différentes combinaisons de choix possible, des différentes combinaisons d’actions possible (en vue de l’algo avec arborescence)
 * Différentes stratégies possibles pour les joueurs (4 cartes, 11 points) (théorie de jeux ?)
-* Algo utilisant des “trics”, des méthodes qui peuvent servir
+* Expliquation de l'api ?
+* Algo utilisant des “trics”, des méthodes qui peuvent servir (en utilisant ce qu'il y a avant)
 * Algo faisant une arborescence des choix
 * Algo qui en sachant les cartes, fait aussi une arborescence des choix et comparaison l’algo précédent
 
 ## Modélisation
 
-Modéliser le graphe
+Modéliser le graphe (cours ?)
 
 ## Combinaisons
 
@@ -27,3 +28,16 @@ Modéliser le graphe
 
 * Nombres d’actions : 4
 * 1 action prenant 1 carte, 1 action prenant 2 cartes, 1 action prenant 3 cartes, 1 action prenant 4 cartes
+
+
+## Algo suivant les stratégies
+
+* Trois cartes identiques -> choix 3 pour empêcher l'adversaire choisir + 2 cartes de mon côté contre 1
+* Deux paquets de cartes identiques -> premet à l'adversaire de ne pas faire de choix
+* Défausse de deux cartes dont on est sûr d'avoir l'avantage après une défausse ou à défaut une
+* Valider en priorité un 5 -> c'est ce qui fait le plus de points
+* Sinon, dans la majorité des cas, le plus interessant est de faire des simulations et de prendre en compte de meilleur score (2 types de modélisations : relatif et absolu) pour tout les choix possibles (dans le cas de choix limités
+
+## Algo suivant les graphes
+
+A venir (voir cours ?)
