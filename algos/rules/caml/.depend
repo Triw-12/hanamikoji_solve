@@ -1,0 +1,14 @@
+api.cmo api.cmi : \
+    api.ml
+api.cmx api.o api.cmi : \
+    api.ml
+champion.cmo : \
+    api.cmi \
+    champion.cmi \
+    champion.ml
+champion.cmx champion.o : \
+    api.cmi \
+    api.cmx \
+    champion.cmi \
+    champion.ml
+champion.cmi :
