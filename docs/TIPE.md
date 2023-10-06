@@ -14,7 +14,9 @@ Problématique : Peut-t-on trouver une stratégie optimale pour jouer au jeu de 
 
 ## Modélisation
 
-Modéliser le graphe (cours ?)
+
+Modéliser le jeu (cf API)
+
 
 ## Combinaisons
 
@@ -29,9 +31,17 @@ Modéliser le graphe (cours ?)
 * Nombres d’actions : 4
 * 1 action prenant 1 carte, 1 action prenant 2 cartes, 1 action prenant 3 cartes, 1 action prenant 4 cartes
 
+## Explication de l'algo normal
 
-## Algo suivant les stratégies
+### Dans le code
+* Tableau pour la majorité
+* Cas spéciaux pour la possession de Geisha -> en fonction des cartes que je peux encore valider
+* Expliquer le tri des cartes, comment je le stocke et comment il est donné
+* Algo min-max partiel (à enlever ?)
+* Action valider -> On ne veux pas valider les cartes dont on est pas sur
+* Choix optimaux pour le choix paquets
 
+### Théorie (à enlever ?)
 * Trois cartes identiques -> choix 3 pour empêcher l'adversaire choisir + 2 cartes de mon côté contre 1
 * Deux paquets de cartes identiques -> premet à l'adversaire de ne pas faire de choix
 * Défausse de deux cartes dont on est sûr d'avoir l'avantage après une défausse ou à défaut une
