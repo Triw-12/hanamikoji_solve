@@ -1,6 +1,6 @@
 from api import *
 import time
-import math
+from math import inf
 
 
 def valeur(g, possession=False):
@@ -22,6 +22,25 @@ def valeur(g, possession=False):
     else:
         return 0
 
+
+def nouvelle_manche():
+    """
+    Si une nouvelle manche commence, réinitaliser les variables avec celle de la nouvelle manche
+    Renvoie True si c'est une nouvelle manche
+    """
+    global nb_manche, cartes, sec, defausse
+    if manche() != nb_manche:
+        print("C'est une nouvelle manche")
+        l_cartes = cartes_en_main()
+        sec = -1
+        defausse = [0 for _ in range(7)]
+        nb_manche = manche()
+        cartes = [0 for _ in range(7)]
+        for c in l_cartes:
+            cartes[c] += 1
+        return True
+    else:
+        return False
 
 def nb_validee(j, v=False):
     """
@@ -204,15 +223,7 @@ def jouer_tour():
     l_cartes.sort(reverse=True)#Tri des cartes en commencant par la plus forte
     action_non_faite = True
 
-    if manche() != nb_manche:
-        print("C'est une nouvelle manche")
-        sec = -1
-        defausse = [0 for _ in range(7)]
-        nb_manche = manche()
-        cartes = [0 for _ in range(7)]
-        for c in l_cartes:
-            cartes[c] += 1
-    else:
+    if not(nouvelle_manche()):
         p = carte_piochee()
         cartes[p] += 1
 
@@ -280,11 +291,11 @@ def jouer_tour():
     # Fait le choix triple en fonction d'un algo min-max partiel
     if not est_jouee_action(MOI, action.CHOIX_TROIS) and action_non_faite:
         choix_f = []
-        maxi = -math.inf
+        maxi = -inf
         for i in range(len(l_cartes)):
             for j in range(i + 1, len(l_cartes)):
                 for l in range(j + 1, len(l_cartes)):#Pour toutes les permutiations possibles
-                    mini = math.inf
+                    mini = inf
                     for m in range(3):#Pour chaqu'un des placements des cartes
                         #Ajouts des cartes pour simulation
                         add_m = [0 for _ in range(7)]
@@ -445,7 +456,7 @@ def jouer_tour():
     #Defausse 3
     if not est_jouee_action(MOI, action.DEFAUSSER) and action_non_faite:
         choix = []
-        diff = -math.inf
+        diff = -inf
         for i in range(len(l_cartes)):
             for j in range(i + 1, len(l_cartes)):#Toutes les permutations
                 add = [0, 0, 0, 0, 0, 0, 0]
@@ -468,13 +479,13 @@ def jouer_tour():
     #Choix paquets
     if not est_jouee_action(MOI, action.CHOIX_PAQUETS) and action_non_faite:
         maximum = max(cartes)
-        if maximum == 3 or maximum == 4:#
+        if maximum == 3 or maximum == 4:#On n'a pas le choix
             for i in range(4):
                 cartes[l_cartes[i]] -= 1
             e = action_choix_paquets(l_cartes[0], l_cartes[1], l_cartes[2], l_cartes[3])
             action_non_faite = False
             print("Dernier choix de paquets force (sans reel choix)")
-        elif maximum == 2:
+        elif maximum == 2:# 2 cartes identiques
             num = -1
             for l in range(len(cartes)):
                 if cartes[l] == 2:
@@ -501,11 +512,11 @@ def jouer_tour():
             ):
                 e = action_choix_paquets(num, num, liste_d[0], liste_d[1])
                 action_non_faite = False
-                print("Choix paquets optimal avec 2 / 1-1 ")
+                print("Choix paquets optimal avec les deux identiques du meme cote ")
             elif possede_abs(num, defausse=defausse, add_m=add[0][0], add_a=add[0][1]) == 1:
                 e = action_choix_paquets(num, liste_d[0], num, liste_d[1])
                 action_non_faite = False
-                print("Choix paquets optimal avec 1-1 / 1-1 ")
+                print("Choix paquets optimal avec les deux identiques dans des paquets differents ")
         else:
             liste_d = l_cartes.copy()
             add = [[[0 for _ in range(7)] for _ in range(2)] for _ in range(3)]
@@ -522,12 +533,12 @@ def jouer_tour():
             add[2][1][liste_d[2]] += 1
             add[2][0][liste_d[1]] += 1
             add[2][1][liste_d[3]] += 1
-
+        #Simulation min-max partielle
         if action_non_faite:
             choix_f = []
-            maxi = -math.inf
+            maxi = -inf
             for i in range(len(add)):
-                mini = math.inf
+                mini = inf
                 for j in range(2):
                     l = 1 #1 si j = 0; 0 si j = 1
                     if j == 1:
@@ -561,41 +572,31 @@ def jouer_tour():
 # Fonction appelee lors du choix entre les trois cartes lors de l'action de
 # l'adversaire (cf tour_precedent)
 def repondre_action_choix_trois():
-    global nb_manche
-    if manche() != nb_manche:
-        global cartes, sec, defausse
-        l_cartes = cartes_en_main()
-        print("C'est une nouvelle manche")
-        sec = -1
-        defausse = [0 for _ in range(7)]
-        nb_manche = manche()
-        cartes = [0 for _ in range(7)]
-        for c in l_cartes:
-            cartes[c] += 1
+    nouvelle_manche()
     print("Repondre action 3")
     choix = []
     maxi = []
-    a = tour_precedent()
-    lc = [a.c1, a.c2, a.c3]
+    tour_p = tour_precedent()
+    lc = [tour_p.c1, tour_p.c2, tour_p.c3]#Liste des cartes possibles
     for i in range(3):
         maxi.append(lc[i])
         choix.append(i)
     if maxi[0] == maxi[1] and maxi[1] == maxi[2]:
+        print("Trois cartes identiques")
         e = repondre_choix_trois(choix[0])
     else:
         res = []
         choix_m = 0
-        diff = -100000
-        for l in range(3):
-            c = lc.copy()
-            # print(c, maxi, l)
-            c.remove(maxi[l])
+        diff = -inf
+        for l in range(3):#Pour chaque cartes possibles
+            liste_cartes = lc.copy()
+            liste_cartes.remove(maxi[l])
             add_m = [0, 0, 0, 0, 0, 0, 0]
             add_a = [0, 0, 0, 0, 0, 0, 0]
             add_m[maxi[l]] += 1
-            add_a[c[0]] += 1
-            add_a[c[1]] += 1
-            res.append(simul_points(add_m=add_m, add_a=add_a, relatif=True))
+            add_a[liste_cartes[0]] += 1
+            add_a[liste_cartes[1]] += 1
+            res.append(simul_points(add_m=add_m, add_a=add_a, relatif=True))#Simulations
             if res[l][0] - res[l][1] > diff:
                 diff = res[l][0] - res[l][1]
                 choix_m = choix[l]
@@ -607,35 +608,25 @@ def repondre_action_choix_trois():
 # Fonction appelee lors du choix entre deux paquets lors de l'action de
 # l'adversaire (cf tour_precedent)
 def repondre_action_choix_paquets():
-    global nb_manche
-    if manche() != nb_manche:
-        global cartes, sec, defausse
-        l_cartes = cartes_en_main()
-        print("C'est une nouvelle manche")
-        sec = -1
-        defausse = [0 for _ in range(7)]
-        nb_manche = manche()
-        cartes = [0 for _ in range(7)]
-        for c in l_cartes:
-            cartes[c] += 1
+    nouvelle_manche()
     print("Repondre paquet")
-    a = tour_precedent()
-    lc = [a.c1, a.c2, a.c3, a.c4]
-    if (a.c1 == a.c3 and a.c2 == a.c4) or (a.c1 == a.c4 and a.c2 == a.c3):
+    tour_p = tour_precedent()
+    lc = [tour_p.c1, tour_p.c2, tour_p.c3, tour_p.c4]#Liste des cartes possibles
+    if (lc[0] == lc[2] and lc[1] == lc[3]) or (lc[0] == lc[3] and lc[1] == lc[2]):
         print("Meme paquets !")
         e = repondre_choix_paquets(0)
     else:
         res = []
         choix_m = -1
-        diff = -100000
-        for l in range(0, 3, 2):
-            c = list(lc)
+        diff = -inf
+        for l in range(0, 3, 2):#l = 0 ou 2
+            liste_cartes = list(lc)
             add_m = [0, 0, 0, 0, 0, 0, 0]
             add_a = [0, 0, 0, 0, 0, 0, 0]
-            add_m[c.pop(l)] += 1
-            add_m[c.pop(l)] += 1
-            add_a[c[0]] += 1
-            add_a[c[1]] += 1
+            add_m[liste_cartes.pop(l)] += 1#Les deux cartes donnés à l'adversaires (0,1 ou 2,3)
+            add_m[liste_cartes.pop(l)] += 1
+            add_a[liste_cartes[0]] += 1
+            add_a[liste_cartes[1]] += 1
             res.append(simul_points(add_m=add_m, add_a=add_a, relatif=True))
             i = 0
             if l == 2:
@@ -643,32 +634,9 @@ def repondre_action_choix_paquets():
             if res[i][0] - res[i][1] > diff:
                 diff = res[i][0] - res[i][1]
                 choix_m = i
-            elif res[i][0] - res[i][1] == diff:
-                choix_m = -1
-                print("Egalite")
+        
         print(choix_m)
-        if choix_m != -1:
-            e = repondre_choix_paquets(choix_m)
-        elif valeur(lc[0], True) + valeur(lc[1], True) > valeur(lc[2], True) + valeur(
-            lc[3], True
-        ):
-            print(lc[0], lc[1], lc[2], lc[3], valeur(lc[0]), valeur(lc[2]))
-            e = repondre_choix_paquets(0)
-        elif valeur(lc[0], True) + valeur(lc[1], True) < valeur(lc[2], True) + valeur(
-            lc[3], True
-        ):
-            print(lc[0], lc[1], lc[2], lc[3], valeur(lc[0]), valeur(lc[2]))
-            e = repondre_choix_paquets(1)
-        else:
-            print("Egalite parfaite")
-            if possession_geisha(lc[3]) == MOI or possession_geisha(lc[2]) == MOI:
-                e = repondre_choix_paquets(1)
-            elif possession_geisha(lc[0]) == MOI or possession_geisha(lc[1]) == MOI:
-                e = repondre_choix_paquets(0)
-            elif possession_geisha(lc[0]) != ADV and possession_geisha(lc[1]) != ADV:
-                e = repondre_choix_paquets(0)
-            else:
-                e = repondre_choix_paquets(1)  # Au pif
+        e = repondre_choix_paquets(choix_m)
         print("Resultat simulation :", res)
     print("Erreur :", e)
     print()
