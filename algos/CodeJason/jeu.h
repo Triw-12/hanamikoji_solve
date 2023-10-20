@@ -2,3 +2,4 @@
 #include <stdlib.h>
 
 
+int** nouv_manche();

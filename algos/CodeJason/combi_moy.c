@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "jeu.h"
+
 
 int* combi_to_nmb(int* main,int cartes_t){
     //Renvois le nombre de carte différente, de doublons ( ou plus), de triplés (ou plus) et de quadruplé (ou plus) de la main
@@ -36,9 +38,9 @@ int* combi_to_nmb(int* main,int cartes_t){
     return nmb_c;
 }
 
-int nmb_combi(int* main,int cartes_t,bool* action){
+int nmb_combi(int* hand,int cartes_t,bool* action){
 
-    int* nmb_c=combi_to_nmb(main,cartes_t);
+    int* nmb_c=combi_to_nmb(hand,cartes_t);
     int nb_t=0;
 
     if (action[0]){
@@ -74,12 +76,6 @@ int nmb_combi(int* main,int cartes_t,bool* action){
 
 
 int main(){
-
-    int main[8]={0,0,0,1,2,2,3,5};
-
-    int* tab=combi_to_nmb(main,8);
-
-    printf ("1: %d\n2: %d\n3: %d\n4: %d\n",tab[0],tab[1],tab[2],tab[3]);
 
 
 
