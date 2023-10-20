@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 
 int* combi_to_nmb(int* main,int cartes_t){
@@ -35,28 +36,38 @@ int* combi_to_nmb(int* main,int cartes_t){
     return nmb_c;
 }
 
-int nmb_combi(int* main,int cartes_t){
+int nmb_combi(int* main,int cartes_t,bool* action){
 
     int* nmb_c=combi_to_nmb(main,cartes_t);
+    int nb_t=0;
 
-    int nb_c1= nmb_c[0];
+    if (action[0]){
+        int nb_c1= nmb_c[0];
+        nb_t=nb_t+nb_c1;
+    }
+    
+    if (action[1]){
+       int nb_c2= nmb_c[1]+    // 2 fois la même carte
+        (nmb_c[0]*(nmb_c[0]-1))/2 ;  // 2 cates différentes
+        nb_t=nb_t+nb_c2;
+    }
 
-    int nb_c2= nmb_c[1]+    // 2 fois la même carte
-    (nmb_c[0]*(nmb_c[0]-1))/2 ;  // 2 cates différentes
+    if (action[2]){
+        int nb_c3= nmb_c[2]+    // 3 fois la même cartes
+        2* nmb_c[1]*(nmb_c[0]-1)+    // 2 fois la même cartes et une autre carte
+        3* (nmb_c[0]-1)*nmb_c[0]*(2*nmb_c[0]-4)/12 ; // 3 cartes différentes
+        nb_t=nb_t+nb_c3;
+    }
 
-    int nb_c3= nmb_c[2]+    // 3 fois la même cartes
-    2* nmb_c[1]*(nmb_c[0]-1)+    // 2 fois la même cartes et une autre carte
-    3* (nmb_c[0]-1)*nmb_c[0]*(2*nmb_c[0]-4)/12 ; // 3 cartes différentes
-
-    int nb_c4= nmb_c[3] +   // 4 fois la même cartes
-    2* nmb_c[2]*(nmb_c[0]-1) +   // 3 fois la même cartes et 1 autre carte
-    3* nmb_c[1]*(nmb_c[1]-1)/2 +   // 2 fois 2 cartes
-    4* nmb_c[1]*( (nmb_c[0]-1) * (nmb_c[0]-2)/2) + // 2 fois deux cartes et 2 cartes différentes
-    6* nmb_c[0]*(nmb_c[0]-1)* (nmb_c[0]*nmb_c[0]-5*nmb_c[0]+6)/24;    //4 cartes différentes           
-
-
-    int nb_t=nb_c1+nb_c2+nb_c3+nb_c4;
-
+    
+    if (action[3]){
+        int nb_c4= nmb_c[3] +   // 4 fois la même cartes
+        2* nmb_c[2]*(nmb_c[0]-1) +   // 3 fois la même cartes et 1 autre carte
+        3* nmb_c[1]*(nmb_c[1]-1)/2 +   // 2 fois 2 cartes
+        4* nmb_c[1]*( (nmb_c[0]-1) * (nmb_c[0]-2)/2) + // 2 fois deux cartes et 2 cartes différentes
+        6* nmb_c[0]*(nmb_c[0]-1)* (nmb_c[0]*nmb_c[0]-5*nmb_c[0]+6)/24;    //4 cartes différentes
+        nb_t=nb_t+nb_c4;
+    }
 
     return nb_t;
 }
