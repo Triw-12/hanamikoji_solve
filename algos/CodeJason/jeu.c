@@ -13,44 +13,31 @@ int** nouv_manche(){
 
     int** paquet=malloc(4*sizeof(int*));
 
+    paquet[0]=malloc(6*sizeof(int));
 
-    for (int i=0;i<4;i++){
+    for (int j=0;j<6;j++){
+        var_al=21;
 
+        while (carte_t[var_al]==-1){
+            var_al=rand()%21;
+        } 
 
-        if (i%2==0){
-            paquet[i]=malloc(6*sizeof(int));
+        paquet[0][j]=carte_t[var_al];
+        carte_t[var_al]=-1;
 
-            for (int j=0;j<6;j++){
-            var_al=21;
+    }
 
-            while (carte_t[var_al]==-1){
-                var_al=rand()%21;
-            } 
+    paquet[1]=malloc(4*sizeof(int));
 
-            paquet[i][j]=carte_t[var_al];
-            carte_t[var_al]=-1;
+    for (int j=0;j<4;j++){
+        var_al=21;
 
-            }
+        while (carte_t[var_al]==-1){
+            var_al=rand()%21;
+        } 
 
-        } else {
-            paquet[i]=malloc(4*sizeof(int));
-
-            for (int j=0;j<4;j++){
-            var_al=21;
-
-            while (carte_t[var_al]==-1){
-                var_al=rand()%21;
-            } 
-
-            paquet[i][j]=carte_t[var_al];
-            carte_t[var_al]=-1;
-
-            }   
-        }
-        
-        
-        
-
+        paquet[1][j]=carte_t[var_al];
+        carte_t[var_al]=-1;
     }
 
     return paquet;

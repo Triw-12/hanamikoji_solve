@@ -38,7 +38,7 @@ int* combi_to_nmb(int* main,int cartes_t){
     return nmb_c;
 }
 
-int nmb_combi(int* hand,int cartes_t,bool* action){
+int nmb_combi_tour(int* hand,int cartes_t,bool* action){
 
     int* nmb_c=combi_to_nmb(hand,cartes_t);
     int nb_t=0;
@@ -73,6 +73,30 @@ int nmb_combi(int* hand,int cartes_t,bool* action){
 
     return nb_t;
 }
+
+int nmb_combi_manche(int** manche){
+    //renvois le nombre total de combinaison dans une manche prédéfini
+
+    int nmb_t=0;
+    int nmb_c=6;
+    int* hand=malloc(7*sizeof(int));
+
+    for (int i=0;i<6;i++){
+        hand[i]=manche[0][i];
+    }
+
+    for (int i=0;i<4;i++){
+        hand[nmb_c]=manche[1][i];
+        nmb_c++;
+
+
+
+
+    }
+
+
+}
+
 
 
 int main(){
