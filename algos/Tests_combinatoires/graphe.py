@@ -71,8 +71,10 @@ def C():
         ]
     temps1 = int(time.time())
     while len(pile) != 0:
+        """
         if tour_boucle % 10000000 == 0:
             print(tour_boucle, len(pile))
+        """
         etat = pile.pop()
         p1 = etat[0]  # paquet 1
         p2 = etat[1]  # paquet 2
@@ -126,7 +128,7 @@ def C():
                     cpt += cst2
         tour_boucle += 1
         pbar.update(1)
-        if tour_boucle % 1000000 == 0:
+        if tour_boucle % 10000000 == 0:
             print("Sauvegarde en cours...")
             print(pile)
             fichier = open("save_graphe.txt", "w")
@@ -144,7 +146,7 @@ def C():
             print("Sauvegarde terminée")
     pbar.close()
     print("Enregistement")
-    fichier = open("fin.txt","w")
+    fichier = open("fin.txt", "w")
     fichier.write(str(temps + int(time.time()) - temps1))
     fichier.write(str(cpt) + "\n")
     fichier.write(str(tour_boucle) + "\n")
