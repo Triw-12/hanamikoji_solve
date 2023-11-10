@@ -4,7 +4,7 @@
 #include <time.h>
 
 int** nouv_manche(){
-    //Renvois 4 paquets représentant les mains de chaques joueurs ainsi que les cartes qu'ils piocheront
+    //Renvois 2 paquets représentant les mains d'un joueur ainsi que les cartes qu'il piochera
 
     srand(time(NULL));
 

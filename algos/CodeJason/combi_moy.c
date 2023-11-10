@@ -4,6 +4,17 @@
 
 #include "jeu.h"
 
+int coefBinomial(int n, int k){
+    //calcule k parmis n
+ 
+    if (k > n)
+        return 0;
+    if (k == 0 || k == n)
+        return 1;
+  
+    return coefBinomial(n-1, k-1) + coefBinomial(n-1, k);
+}
+
 
 int* combi_to_nmb(int* main,int cartes_t){
     //Renvois le nombre de carte différente, de doublons ( ou plus), de triplés (ou plus) et de quadruplé (ou plus) de la main
@@ -39,6 +50,7 @@ int* combi_to_nmb(int* main,int cartes_t){
 }
 
 int nmb_combi_tour(int* hand,int cartes_t,bool* action){
+    //Renvois le nombre total de combinaison possible à partir de hand contenant cartes_t cartes et avec les actions possibles contenues dans action
 
     int* nmb_c=combi_to_nmb(hand,cartes_t);
     int nb_t=0;
@@ -74,12 +86,61 @@ int nmb_combi_tour(int* hand,int cartes_t,bool* action){
     return nb_t;
 }
 
-int nmb_combi_manche(int** manche){
+int*** main_sous_manche(int* hand, bool* action,int nmb_c){
+    //Renvois toute les sous manches possible à la suite d'une manche dont la main est hand et avec actio la liste des actions possibles, trie les sous manches en fonctions de l'action réalisée
+    int*** sous_manche=malloc(4*sizeof(int**));
+
+    int* nmb_fac_main=combi_to_nmb(hand,nmb_c);
+    
+    int j;
+        
+    if (action[0]){ //une carte est enlevée
+        int nmb_sm1= nmb_fac_main[0];
+        sous_manche[0]=malloc(nmb_sm1*sizeof(int*));
+
+        for (int i=0; i<nmb_sm1; i++){
+            sous_manche[0][i]=malloc((nmb_c-1)*sizeof(int));
+            j=0;
+
+            while (j<nmb_c-1){
+                if (i=j){
+                    j++;
+                } else {
+                    sous_manche[0][i][j]=hand[j];
+                }
+                j++;
+            }
+
+        }
+    }
+
+    if (action[1]){ //deux cartes enlevée
+        int nmb_sm2=nmb_fac_main[1]+coefBinomial(2, nmb_fac_main[0]);
+        sous_manche[1]=malloc(nmb_sm2*sizeof(int*));
+
+        for (int i=0; i<nmb_sm2; i++){
+            sous_manche[1][i]=malloc((nmb_c-1)*sizeof(int));
+        }
+
+
+
+    }
+
+
+
+    if (action[1]){
+
+        sous_manche[1]=malloc(sizeof(int));
+    }
+
+
+
+}
+
+int nmb_combi_manche(int** manche, int* hand, int nmb_c){
     //renvois le nombre total de combinaison dans une manche prédéfini
 
-    int nmb_t=0;
-    int nmb_c=6;
-    int* hand=malloc(7*sizeof(int));
+
 
     for (int i=0;i<6;i++){
         hand[i]=manche[0][i];
