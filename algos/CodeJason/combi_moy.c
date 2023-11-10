@@ -93,6 +93,9 @@ int*** main_sous_manche(int* hand, bool* action,int nmb_c){
     int* nmb_fac_main=combi_to_nmb(hand,nmb_c);
     
     int j;
+    int* nmb_non=malloc(4*sizeof(int));    //entiers à enlever
+
+    int c_nmb_non;  //nombre de fois qu'un entier a été enlevé
         
     if (action[0]){ //une carte est enlevée
         int nmb_sm1= nmb_fac_main[0];
@@ -101,12 +104,14 @@ int*** main_sous_manche(int* hand, bool* action,int nmb_c){
         for (int i=0; i<nmb_sm1; i++){
             sous_manche[0][i]=malloc((nmb_c-1)*sizeof(int));
             j=0;
+            c_nmb_non=0;
 
-            while (j<nmb_c-1){
-                if (i=j){
+            while (j<nmb_c){
+                if (i==j){
                     j++;
+                    c_nmb_non++;
                 } else {
-                    sous_manche[0][i][j]=hand[j];
+                    sous_manche[0][i][j-c_nmb_non]=hand[j];
                 }
                 j++;
             }
@@ -115,23 +120,68 @@ int*** main_sous_manche(int* hand, bool* action,int nmb_c){
     }
 
     if (action[1]){ //deux cartes enlevée
-        int nmb_sm2=nmb_fac_main[1]+coefBinomial(2, nmb_fac_main[0]);
+        int compt=0;
+
+        int nmb_sm21=nmb_fac_main[1];   //nombre de sous manche en suprimant 2 cartes différentes
+        int nmb_sm22=coefBinomial(2, nmb_fac_main[0]);   //nombre de sous manche en suprimant 2 cartes identiques
+        int nmb_sm2= nmb_sm21+nmb_sm22; //nombre de sous manche en suprimant 2 cartes
         sous_manche[1]=malloc(nmb_sm2*sizeof(int*));
 
-        for (int i=0; i<nmb_sm2; i++){
-            sous_manche[1][i]=malloc((nmb_c-1)*sizeof(int));
+        for (int i=0; i<nmb_sm21; i++){
+            sous_manche[1][i]=malloc((nmb_c-2)*sizeof(int));
+            j=0;
+            nmb_non[0]= hand[nmb_fac_main[0]+i];
+            c_nmb_non=0;
+
+            while (j<nmb_c){    //supprime 2 cartes identique
+                if (c_nmb_non<2 && hand[j]==nmb_non[0]){
+                    j++;
+                    c_nmb_non++;
+                } else {
+                    sous_manche[1][i][j-c_nmb_non]=hand[j];
+                }
+            }
+            
         }
 
+        for (int i=0; i<nmb_fac_main[0]; i++){
 
+            for (int l=i+1;l<nmb_fac_main[0];l++){
+                sous_manche[1][compt+nmb_sm21]=malloc((nmb_c-2)*sizeof(int));
+                j=0;
+
+                while (j<nmb_c){
+                    if (j==i || j==l){
+                        j++;
+                        c_nmb_non++;
+
+                    } else {
+                        sous_manche[1][compt+nmb_sm21][j-c_nmb_non]=hand[j];
+                    }
+
+                    j++;
+                }
+
+                compt++;
+            }
+            
+        }
 
     }
 
+    if (action[2]){
 
+        int nmb_sm31=nmb_fac_main[2];
+        int nmb_sm32=nmb_fac_main[1]*(nmb_fac_main[0]-1);
+        int nmb_sm33=coefBinomial(nmb_fac_main[2], 2);
 
-    if (action[1]){
+        int nmb_sm3=nmb_sm31+nmb_sm32+nmb_sm33;
 
-        sous_manche[1]=malloc(sizeof(int));
+        
     }
+
+
+    
 
 
 
