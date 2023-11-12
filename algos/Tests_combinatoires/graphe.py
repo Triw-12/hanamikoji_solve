@@ -4,8 +4,9 @@ import os
 from copy import deepcopy
 import time
 
-paquets = [5, 5, 5, 3, 3, 3, 6, 6, 6, 6, 6, 0, 5, 0, 1, 2, 1, 2, 4, 4, 4]
-
+#paquets = [5, 5, 5, 3, 3, 3, 6, 6, 6, 6, 6, 0, 5, 0, 1, 2, 1, 2, 4, 4, 4]
+#paquets = [2, 4, 5, 3, 2, 1, 0, 3, 6, 4, 6, 5, 1, 6, 6, 5, 4, 6, 5, 3, 0]
+paquets = [0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 6, 6, 6, 6, 3, 4, 5, 5, 6]
 
 def possiblite(p, n):
     a = it.combinations(p, n)
@@ -14,8 +15,6 @@ def possiblite(p, n):
         s.add(i)
     return s
 
-
-print(paquets[6:12])
 
 
 def C():
@@ -130,9 +129,9 @@ def C():
         pbar.update(1)
         if tour_boucle % 10000000 == 0:
             print("Sauvegarde en cours...")
-            print(pile)
+            #print(pile)
             fichier = open("save_graphe.txt", "w")
-            fichier.write(str(temps + int(time.time()) - temps1))
+            fichier.write(str(temps + int(time.time()) - temps1) + "\n")
             fichier.write(str(cpt) + "\n")
             fichier.write(str(tour_boucle) + "\n")
             fichier.write(str(len(pile)) + "\n")
@@ -147,7 +146,7 @@ def C():
     pbar.close()
     print("Enregistement")
     fichier = open("fin.txt", "w")
-    fichier.write(str(temps + int(time.time()) - temps1))
+    fichier.write(str(temps + int(time.time()) - temps1) + "\n")
     fichier.write(str(cpt) + "\n")
     fichier.write(str(tour_boucle) + "\n")
     fichier.write(str(len(pile)) + "\n")
