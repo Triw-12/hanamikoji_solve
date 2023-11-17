@@ -15,6 +15,94 @@ int coefBinomial(int n, int k){
     return coefBinomial(n-1, k-1) + coefBinomial(n-1, k);
 }
 
+void affiche_l(int* lst,int n){
+    //affiche la lst de taille n
+
+    for (int i=0;i<n;i++){
+        printf("%d\n",lst[i]);
+    }
+    printf("\n");
+}
+
+bool appart(int* lst, int deb, int fin, int elem){
+    //Renvois si l'éléments est dans lst entre l'indice deb et fin
+
+    for (int i=deb;i<fin;i++){
+        if (lst[i]==elem){
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+
+int* tri_num(int n,int* lst){
+    //Trie lst d'une manière précise (voir détail à part), lst de taille n
+    
+    int* lst_trie=malloc(n*sizeof(int));
+    int* ind=malloc(5*sizeof(int));
+    bool mis;
+    int etape;
+    int j;
+
+
+    ind[0]=0;
+    for (int i=1;i<5;i++){
+        ind[i]=1;
+    }
+
+    lst_trie[0]=lst[0];
+    for (int i=1;i<n;i++){  //On place chaque élément de lst
+        mis=false;
+        etape=0;
+
+        while (etape<5 && appart(lst_trie,ind[etape],ind[etape+1],lst[i])){  //trouver l'étape correspondante
+            etape++;
+            
+        }
+
+ 
+
+        j=ind[4]-1;
+                
+
+        while (!mis){
+
+             if ((j<ind[etape+1] && lst_trie[j]<lst[i]) || j<ind[etape]){
+
+                lst_trie[j+1]=lst[i];
+                mis=true;
+
+            } else {
+
+                lst_trie[j+1]=lst_trie[j];
+
+                if (j==0){
+                    lst_trie[0]=lst[i];
+                    mis=true;
+                } else {
+                    j=j-1;
+                }
+
+            }
+
+        }
+
+        for (int i=etape+1;i<5;i++){
+            ind[i]++;
+        }
+                
+    }
+
+    free(ind);
+
+    lst=lst_trie;
+
+}
+
+
 
 int* combi_to_nmb(int* main,int cartes_t){
     //Renvois le nombre de carte différente, de doublons ( ou plus), de triplés (ou plus) et de quadruplé (ou plus) de la main
@@ -212,7 +300,22 @@ int nmb_combi_manche(int** manche, int* hand, int nmb_c){
 
 int main(){
 
+    int* lst = malloc(7*sizeof(int));
 
+    lst[0]=1;
+    lst[1]=0;
+    lst[2]=3;
+    lst[3]=1;
+    lst[4]=1;
+    lst[5]=4;
+    lst[6]=4;
+
+
+    int* lst2=tri_num(7, lst);
+
+    for (int i=0;i<7;i++){
+        printf("%d \n",lst2[i]);
+    }
 
     return 0;
 }
