@@ -12,10 +12,6 @@ Problématique : Peut-t-on trouver une stratégie optimale pour jouer au jeu de 
 * Algo faisant une arborescence des choix
 * Algo qui en sachant les cartes, fait aussi une arborescence des choix et comparaison l’algo précédent
 
-## Modélisation
-
-Modéliser le jeu (cf API)
-
 ## Combinaisons
 
 ### Combinaisons de cartes
@@ -49,6 +45,64 @@ Modéliser le jeu (cf API)
 * Valider en priorité un 5 -> c'est ce qui fait le plus de points
 * Sinon, dans la majorité des cas, le plus intéressant est de faire des simulations et de prendre en compte de meilleur score (2 types de modélisations : relatif et absolu) pour tout les choix possibles (dans le cas de choix limités)
 
-## Algo suivant les graphes
+### Limites du programme
 
-A venir (voir cours ?)
+* 2 paquets de cartes identiques : semble meilleur sans cette fonctionnalité, car facile pour l'adversaire de la déjouer (exemple pour validation de 4 cartes de valeur 5)
+* A COMPÉTER
+
+## Algo nombres de combinaisons
+
+### But
+
+On connaît le paquet de cartes et les cartes que on chacun des joueurs et on veut savoir le nombre de combinaisons possibles de faire une manche pour savoir si on peut faire un algo qui regarde qui peut gagner, en sachant l'ensemble du jeu
+
+### Première approche
+
+État sauvegardé :
+
+* La main du joueur 1
+* Le nombre d'actions restantes du joueur 1
+* La main du joueur 2
+* Le nombre d'action restantes du joueur 2
+* Le tour
+* Le coefficient de multiplication pour avoir une majoration du nombre de noeuds dans le graphe
+
+État pour le graphe :
+
+* La main du joueur 1
+* Le nombre d'actions restantes du joueur 1
+* La main du joueur 2
+* Le nombre d'action restantes du joueur 2
+* Les cartes validés et leur position
+* Le tour
+
+Tant que la pile est non vide:
+
+* Retirer le dernier élément de la liste*
+* Rajouter la carte qu'il a pioché
+* Pour toutes les actions possibles restantes:
+  * Pour toutes les combinaisons possibles de prendre i cartes (pour la i ème action):
+    * Ajouter dans la pile le prochain état possible
+
+Retourne un majorant du nombre de noeuds dans le graphe, le nombre de tour de boucle, et le temps d'execution
+
+### Deuxième approche (Jason)
+
+### Difficultés
+
+* Les doublons qui sont vraiment très compliqué à prendre en compte.
+
+### Conclusion
+
+Impossible de faire cet algorithme (beaucoup trop long) alors que on essaye de jouer en temps réel, donc au max une dizaine de minutes
+
+## Algo déterministe efficace
+
+On connaît et on suit la progression des cartes dans sa main, sur le jeu et celles dont on ne sait pas où elles sont.
+
+* Pour chaque coup que l'on peut jouer:
+  * On regarde pour toutes les façons que les cartes ont de finir grâce aux cartes restantes (combinaisons) :
+    * Pour chaque état final : on évalue le score des points puis on fait la différence
+  * On fait la moyenne pour ce coup
+  * On regarde le max des points que l'on a
+On joue le coup qui maximise le nombre de points.
