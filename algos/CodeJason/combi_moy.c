@@ -98,7 +98,7 @@ int* tri_num(int n,int* lst){
 
     free(ind);
 
-    lst=lst_trie;
+    return lst_trie;
 
 }
 
@@ -174,11 +174,15 @@ int nmb_combi_tour(int* hand,int cartes_t,bool* action){
     return nb_t;
 }
 
-int*** main_sous_manche(int* hand, bool* action,int nmb_c){
+void sous_manche(int* main, bool* action,int nmb_c){
     //Renvois toute les sous manches possible à la suite d'une manche dont la main est hand et avec actio la liste des actions possibles, trie les sous manches en fonctions de l'action réalisée
-    int*** sous_manche=malloc(4*sizeof(int**));
+    int*** sous_manche=malloc(4*sizeof(int**)); //va contenir l'ensemble des sous manches
 
-    int* nmb_fac_main=combi_to_nmb(hand,nmb_c);
+    int* hand=tri_num(nmb_c,main);  //La main de carte mais triée
+    affiche_l(hand,nmb_c);
+    printf("\n");
+
+    int* nmb_fac_main=combi_to_nmb(hand,nmb_c); //nombre de sous manche ou 1carte enlevé, 2 cartes enlevé...
     
     int j;
     int* nmb_non=malloc(4*sizeof(int));    //entiers à enlever
@@ -186,17 +190,16 @@ int*** main_sous_manche(int* hand, bool* action,int nmb_c){
     int c_nmb_non;  //nombre de fois qu'un entier a été enlevé
         
     if (action[0]){ //une carte est enlevée
-        int nmb_sm1= nmb_fac_main[0];
+        int nmb_sm1= nmb_fac_main[0];   //nombre de sous manche avec 1 carte enlevé
         sous_manche[0]=malloc(nmb_sm1*sizeof(int*));
 
-        for (int i=0; i<nmb_sm1; i++){
+        for (int i=0; i<nmb_sm1; i++){  //On fait tout les cas possibles
             sous_manche[0][i]=malloc((nmb_c-1)*sizeof(int));
             j=0;
             c_nmb_non=0;
 
             while (j<nmb_c){
                 if (i==j){
-                    j++;
                     c_nmb_non++;
                 } else {
                     sous_manche[0][i][j-c_nmb_non]=hand[j];
@@ -212,7 +215,7 @@ int*** main_sous_manche(int* hand, bool* action,int nmb_c){
 
         int nmb_sm21=nmb_fac_main[1];   //nombre de sous manche en suprimant 2 cartes différentes
         int nmb_sm22=coefBinomial(2, nmb_fac_main[0]);   //nombre de sous manche en suprimant 2 cartes identiques
-        int nmb_sm2= nmb_sm21+nmb_sm22; //nombre de sous manche en suprimant 2 cartes
+        int nmb_sm2= nmb_sm21+nmb_sm22; //nombre de sous manche en suprimant 2 cartes sans doublons
         sous_manche[1]=malloc(nmb_sm2*sizeof(int*));
 
         for (int i=0; i<nmb_sm21; i++){
@@ -223,14 +226,18 @@ int*** main_sous_manche(int* hand, bool* action,int nmb_c){
 
             while (j<nmb_c){    //supprime 2 cartes identique
                 if (c_nmb_non<2 && hand[j]==nmb_non[0]){
-                    j++;
                     c_nmb_non++;
                 } else {
                     sous_manche[1][i][j-c_nmb_non]=hand[j];
                 }
+                j++;
             }
+
+            
             
         }
+
+        compt=nmb_sm21;
 
         for (int i=0; i<nmb_fac_main[0]; i++){
 
@@ -240,11 +247,10 @@ int*** main_sous_manche(int* hand, bool* action,int nmb_c){
 
                 while (j<nmb_c){
                     if (j==i || j==l){
-                        j++;
                         c_nmb_non++;
 
                     } else {
-                        sous_manche[1][compt+nmb_sm21][j-c_nmb_non]=hand[j];
+                        sous_manche[1][compt][j-c_nmb_non]=hand[j];
                     }
 
                     j++;
@@ -252,21 +258,27 @@ int*** main_sous_manche(int* hand, bool* action,int nmb_c){
 
                 compt++;
             }
+
             
+            
+        }
+
+        for (int i=0;i<nmb_sm21;i++){
+            affiche_l(sous_manche[1][i],nmb_c-2);
         }
 
     }
 
-    if (action[2]){
+    // if (action[2]){
 
-        int nmb_sm31=nmb_fac_main[2];
-        int nmb_sm32=nmb_fac_main[1]*(nmb_fac_main[0]-1);
-        int nmb_sm33=coefBinomial(nmb_fac_main[2], 2);
+    //     int nmb_sm31=nmb_fac_main[2];
+    //     int nmb_sm32=nmb_fac_main[1]*(nmb_fac_main[0]-1);
+    //     int nmb_sm33=coefBinomial(nmb_fac_main[2], 2);
 
-        int nmb_sm3=nmb_sm31+nmb_sm32+nmb_sm33;
+    //     int nmb_sm3=nmb_sm31+nmb_sm32+nmb_sm33;
 
         
-    }
+    // }
 
 
     
@@ -302,20 +314,33 @@ int main(){
 
     int* lst = malloc(7*sizeof(int));
 
-    lst[0]=1;
+    lst[0]=6;
     lst[1]=0;
     lst[2]=3;
-    lst[3]=1;
-    lst[4]=1;
+    lst[3]=6;
+    lst[4]=6;
     lst[5]=4;
     lst[6]=4;
 
 
     int* lst2=tri_num(7, lst);
 
-    for (int i=0;i<7;i++){
-        printf("%d \n",lst2[i]);
+    // for (int i=0;i<7;i++){
+    //     printf("%d \n",lst2[i]);
+    // }
+
+    bool* action=malloc(4*sizeof(bool));
+
+    for (int i=0;i<4;i++){
+        action[i]=true;
     }
+
+    sous_manche(lst,action,7);
+
+    free (lst);
+    free (lst2);
+
+
 
     return 0;
 }

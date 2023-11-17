@@ -1,2 +1,2 @@
-On trie les listes de manière à avoir une fois chaque élément dans l'ordre croissant, puis les doublons, triplées...
+On trie les listes de manière à avoir une fois chaque élément dans l'ordre croissant, puis les doublons, triplées et quadriplé ou plus
 La liste [2,3,1,1,2,2] devient [1,2,3,1,2,2]
