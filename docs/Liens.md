@@ -15,3 +15,7 @@
 ## A regarder
 
 <https://github.com/tcordina/rpesd2018>
+
+## Autre
+
+<https://dohliam.github.io/libreoffice-impress-templates/>
