@@ -4,9 +4,10 @@ import os
 from copy import deepcopy
 import time
 
-#paquets = [5, 5, 5, 3, 3, 3, 6, 6, 6, 6, 6, 0, 5, 0, 1, 2, 1, 2, 4, 4, 4]
-#paquets = [2, 4, 5, 3, 2, 1, 0, 3, 6, 4, 6, 5, 1, 6, 6, 5, 4, 6, 5, 3, 0]
+# paquets = [5, 5, 5, 3, 3, 3, 6, 6, 6, 6, 6, 0, 5, 0, 1, 2, 1, 2, 4, 4, 4]
+# paquets = [2, 4, 5, 3, 2, 1, 0, 3, 6, 4, 6, 5, 1, 6, 6, 5, 4, 6, 5, 3, 0]
 paquets = [0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 6, 6, 6, 6, 3, 4, 5, 5, 6]
+
 
 def possiblite(p, n):
     a = it.combinations(p, n)
@@ -16,13 +17,13 @@ def possiblite(p, n):
     return s
 
 
-
 def C():
     if os.path.exists("save_graphe.txt"):
         print("Récupération du fichier en cours")
         fichier = open("save_graphe.txt", "r")
         temps = int(fichier.readline().strip())
         cpt = int(fichier.readline().strip())
+        cpt_fin = int(fichier.readline().strip())
         tour_boucle = int(fichier.readline().strip())
         nb_pile = int(fichier.readline().strip())
         pile = []
@@ -57,6 +58,7 @@ def C():
         temps = 0
         tour_boucle = 0
         cpt = 0
+        cpt_fin = 0
         pile = [
             [
                 paquets[:6],
@@ -82,7 +84,7 @@ def C():
         tour = etat[4]
         cst = etat[5]
         if tour == 20:
-            pass
+            cpt_fin += 1
         elif tour % 2 == 0:
             p1.append(paquets[tour])
             assert len(p1) <= 7, (p1, tour)
@@ -129,10 +131,11 @@ def C():
         pbar.update(1)
         if tour_boucle % 10000000 == 0:
             print("Sauvegarde en cours...")
-            #print(pile)
+            # print(pile)
             fichier = open("save_graphe.txt", "w")
             fichier.write(str(temps + int(time.time()) - temps1) + "\n")
             fichier.write(str(cpt) + "\n")
+            fichier.write(str(cpt_fin) + "\n")
             fichier.write(str(tour_boucle) + "\n")
             fichier.write(str(len(pile)) + "\n")
             for etat_p in pile:
@@ -146,10 +149,12 @@ def C():
     pbar.close()
     print("Enregistement")
     fichier = open("fin.txt", "w")
-    fichier.write(str(temps + int(time.time()) - temps1) + "\n")
-    fichier.write(str(cpt) + "\n")
-    fichier.write(str(tour_boucle) + "\n")
-    fichier.write(str(len(pile)) + "\n")
+    fichier.write(
+        "Temps en secondes : " + str(temps + int(time.time()) - temps1) + "\n"
+    )
+    fichier.write("Nombre de noeuds dans le graphe maximal : " + str(cpt) + "\n")
+    fichier.write("Nombre d'états finaux : " + str(cpt_fin) + "\n")
+    fichier.write("Nombre de tours de boucle : " + str(tour_boucle) + "\n")
     fichier.close()
     print("Terminé !")
 
