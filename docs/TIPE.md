@@ -92,6 +92,13 @@ Retourne un majorant du nombre de noeuds dans le graphe, le nombre de tour de bo
 
 ### Deuxième approche (Jason)
 
+* Permet de ne pas en prendre en compte les doublons et d'avoir le nombre exacte de combinaison d'un joueur. Permet ainsi d'avoir la valeur moyenne de combiannaison d'une manche et donc d'une partie.
+
+* Calcule des sous-manches à partir de la composition d'une partie
+  * Utilisation de liste triée de manière à avoir dans l'ordre: les éléments uniques, les doublons, les triplés et les quadruplés ou plus.
+  * Enlève le nombre de carte adéquate celon les actions possibles.
+* Calcule récursivement le nombre de combinaison total.
+
 ### Difficultés
 
 * Les doublons qui sont vraiment très compliqué à prendre en compte.
