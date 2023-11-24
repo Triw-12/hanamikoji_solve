@@ -68,9 +68,10 @@ int* tri_num(int n,int* lst){
         j=ind[4]-1;
                 
 
-        while (!mis){
+        while (!mis){   //tant que l'élément n'est pas mis
 
              if ((j<ind[etape+1] && lst_trie[j]<lst[i]) || j<ind[etape]){
+                //Si il est entre les deux bornes et que l'élément est plus grand que le suivant
 
                 lst_trie[j+1]=lst[i];
                 mis=true;
@@ -80,6 +81,7 @@ int* tri_num(int n,int* lst){
                 lst_trie[j+1]=lst_trie[j];
 
                 if (j==0){
+                    //Si il s'agit du dernier élément
                     lst_trie[0]=lst[i];
                     mis=true;
                 } else {
