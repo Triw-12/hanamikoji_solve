@@ -1,3 +1,5 @@
+# Liste trié par occurence
+
 ## Principe
 
 Pour une liste L :
@@ -11,7 +13,7 @@ Pour une liste L :
 
 
 
-## Pseudo-code :
+## Pseudo-code
 
 * Entré : L une liste à trier
 * Sortie: L', la liste obtenu en triant L
