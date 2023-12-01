@@ -1,25 +1,27 @@
-# De combinaison à nombre
+# De combinaison aux nombres de doublons
 
 ## Principe
-* Renvois une liste comportant le nombre de carte différent, de doublets, de triplets et de quadruplés
+
+* Renvoie une liste comportant le nombre de cartes différentes, de doublets, de triplets et de quadruplés
 
 ## Pseudo-code
 
 * Entrée : une liste L d'éléments
 * Sortie : La liste décrit si-dessus
 
-* On suppose la liste en entré triée par occurence et non vide
-        
-        ind = 0
-        Locc <- [1,0,0,0]
+* On suppose la liste en entré triée par occurrence et non vide
 
-        Pour chaque élément c de lst (sauf le
-        premier) :
+```text
+    ind <- 0
+    Locc <- [1,0,0,0] #Liste triée par occurrence
 
-            comparé cette élément avec l'élément 
-            précédent, si il est inférieur ou égal 
-                ind <- ind+1
+    Pour chaque élément c de lst (sauf le
+    premier) :
 
-            Locc [ind] augmente de 1
+        comparer cet élément avec l'élément précédent, si il est inférieur ou égal alors :
+            ind <- ind+1
 
-        Renvois Locc
+        Locc[ind] += 1
+
+    Renvoie Locc
+```
