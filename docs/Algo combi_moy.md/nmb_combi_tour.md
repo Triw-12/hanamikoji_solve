@@ -22,7 +22,7 @@
 
     * $$ Nmbcombi2 = doub + {diff \cdot (diff-1) \over 2} $$
 
-    * $$ Nmbcombi3= tri + 2 \cdot doub \cdot (dif-1) +3 { (dif-1) \cdot dif \cdot (2 \cdot dif-4) \over 12} $$
+    * $$ Nmbcombi3= tri + 2 \cdot doub \cdot (diff-1) +3 { (diff-1) \cdot diff \cdot (2 \cdot diff-4) \over 12} $$
 
     * $$ Nmbcombi4 = quad+2 \cdot trip \cdot (diff-1) +     3 {doub \cdot (doub-1) \over 2 } + 4  {doub \cdot  (diff-1) \cdot (diff-2) \over 2} + 6{ diff \cdot (diff-1) \cdot (diff^2 - 5 \cdot diff +6) \over 24} $$
 
