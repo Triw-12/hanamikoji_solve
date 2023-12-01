@@ -116,4 +116,4 @@ On connaît et on suit la progression des cartes dans sa main, sur le jeu et cel
     * Pour chaque état final : on évalue le score des points puis on fait la différence
   * On fait la moyenne pour ce coup
   * On regarde le max des points que l'on a
-On joue le coup qui maximise le nombre de points.
+* On joue le coup qui maximise le nombre de points.
