@@ -20,4 +20,3 @@
 * On se permet de définir 4 sépare-main, représentant les 4 sections du trie par occurrence
 
 * Pour le premier set de sous-manches :
-  * Pour chaque  
