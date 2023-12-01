@@ -94,67 +94,85 @@ def sous_manche (main, action) :
     nmb_c=combi_to_nmb(main)
     length=len(main)
 
-    sous_manche=[]
+    sous_manche=[[],[],[],[]]
 
     if action[0] :  # Si on choisit la première action
         for i in range (nmb_c[0]) :
-            sous_manche.append([])
+            sous_manche[0].append([])
 
             for j in range (length) :
                 if j!=i :
-                    sous_manche[i].append(main_tri[j])
+                    sous_manche[0][i].append(main_tri[j])
 
     if action[1] :  # Si on choisit la deuxième action 
         for i in range (nmb_c[1]) :
-            sous_manche.append([])
+            sous_manche[1].append([])
 
             for j in range (length) :
                 if j+1>nmb_c[0]+nmb_c[1] or main_tri[nmb_c[0]+i]!=main_tri[j] :
-                    sous_manche[-1].append(main_tri[j])
+                    sous_manche[1][-1].append(main_tri[j])
         
         for i in range (nmb_c[0]) :
             for l in range (i+1,nmb_c[0]) :
 
-                sous_manche.append([])
+                sous_manche[1].append([])
 
                 for j in range (length) :
                     if j!=i and j!=l :
-                        sous_manche[-1].append(main_tri[j])
+                        sous_manche[1][-1].append(main_tri[j])
     
     if action[2] :  # Dans le cas où on choisit la troisième action
 
         for i in range (nmb_c[2]) : # Cas où on prend 3 fois la même cartes
-            sous_manche.append([])
+            sous_manche[2].append([])
 
             for j in range (length) :
                 if j+1>nmb_c[0]+nmb_c[1]+nmb_c[2] or main_tri[nmb_c[0]+nmb_c[1]+i]!=main_tri[j]:
-                    sous_manche[-1].append(main_tri[j])
+                    sous_manche[2][-1].append(main_tri[j])
         
 
         for i in range (nmb_c[1]) : # Cas où on prend 2 fois la même carte et une carte différente
             for j in range (nmb_c[0]) :
 
                 if main_tri[i+nmb_c[0]] != main_tri[j] :
-                    sous_manche.append([])
+                    sous_manche[2].append([])
 
                     for c in range (length) :
 
                         if c!=j and (main_tri[c]!=main_tri[i+nmb_c[0]] or c>nmb_c[0]+nmb_c[1]-1) :
-                            sous_manche[-1].append(main_tri[c])
+                            sous_manche[2][-1].append(main_tri[c])
 
         for i in range (nmb_c[0]) : # Cas où on prend 3 cartes différentes
             for j in range (i+1,nmb_c[0]) :
                 for l in range (j+1, nmb_c[0]) :
-                    sous_manche.append([])
+                    sous_manche[2].append([])
 
                     for c in range (length) :
                         if not appartient([i,j,l],c) :
-                            sous_manche[-1].append(main_tri[c])
+                            sous_manche[2][-1].append(main_tri[c])
 
     if action[3] :
-        
+        nmb_a3=nmb_c[0]+nmb_c[1]+nmb_c[2]
 
+        for i in range (nmb_c[3]) :
+            sous_manche[3].append([])
 
+            for c in range (length) :
+
+                if main_tri[c]!=main_tri[i+nmb_a3] or c>=nmb_a3+nmb_c[3] :
+                    sous_manche[3][-1].append(main_tri[c])
+
+        for i in range (nmb_c[2]) :
+
+            for j in range (nmb_c[0]) :
+
+                if main_tri[j] != main_tri[i+nmb_c[0]+nmb_c[1]] :
+                    sous_manche[3].append([])
+
+                    for c in range (length) :
+
+                        if c != j and (main_tri[c] != main_tri[nmb_c[0]+nmb_c[1]+i] or c>=nmb_a3) :
+                            sous_manche[3][-1].append(main_tri[c])
 
 
     print(sous_manche)
@@ -162,7 +180,7 @@ def sous_manche (main, action) :
 
 
 main=[0,0,1,3,3,5,6,6,6]
-main2 = [0,0,0,2,5,6,6,6,6,6]
+main2 = [0,0,0,2,5,6,6,0,6,6]
 #print(tri_occ(main))
 #sous_manche(main,[False,False,True,True])
 print(tri_occ(main2))
