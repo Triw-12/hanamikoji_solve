@@ -15,6 +15,7 @@
 
 * On suppose la liste de carte pris en entré trier par occurenc
 * On se permet aussi d'utiliser les différents nombres optenues par la fonction combi_to_nmb
+* On se permet de définir 4 sépare-main, représentant les 4 sections du trie par occurence
 
-### Premiers sets de sous manches
-
+* Pour le premier set de sous-manches :
+    * Pour chaque  
