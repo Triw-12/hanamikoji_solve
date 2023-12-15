@@ -69,19 +69,19 @@ def nmb_combi_tour (lst, action) :
     """" Renvois le nombre de sous manche de lst """
 
     nmb_c=combi_to_nmb(lst)
-    total=0
+    total=[0,0,0,0]
 
     if action[0] :
-        total+=nmb_c[0]
+        total[0] =nmb_c[0]
 
     if action[1] :
-        total += nmb_c[1] + (nmb_c[0]*(nmb_c[0]-1))/2
+        total[1] = nmb_c[1] + (nmb_c[0]*(nmb_c[0]-1))/2
     
     if action[2] :
-        total += nmb_c[2] + 2* nmb_c[1]*(nmb_c[0]-1) + 3* (nmb_c[0]-1)*nmb_c[0]*(2*nmb_c[0]-4)/12
+        total[2] = nmb_c[2] + 2* nmb_c[1]*(nmb_c[0]-1) + 3* (nmb_c[0]-1)*nmb_c[0]*(2*nmb_c[0]-4)/12
     
     if action[3] :
-        total += nmb_c[3] + 2* nmb_c[2]*(nmb_c[0]-1) + 3* nmb_c[1]*(nmb_c[1]-1)/2 + 4* nmb_c[1]*( (nmb_c[0]-1) * (nmb_c[0]-2)/2) + 6* nmb_c[0]*(nmb_c[0]-1)* (nmb_c[0]*nmb_c[0]-5*nmb_c[0]+6)/24
+        total[3] = nmb_c[3] + 2* nmb_c[2]*(nmb_c[0]-1) + 3* nmb_c[1]*(nmb_c[1]-1)/2 + 4* nmb_c[1]*( (nmb_c[0]-1) * (nmb_c[0]-2)/2) + 6* nmb_c[0]*(nmb_c[0]-1)* (nmb_c[0]*nmb_c[0]-5*nmb_c[0]+6)/24
     
     return total
 
@@ -194,18 +194,60 @@ def sous_manche (main, action) :
                         sous_manche[3][-1].append(main_tri[c])
         
         for i in range (nmb_c[1]) :     # 2 fois la même carte et 2 cartes différentes
-            for j in range (nmb_c[0]) :
 
-                
+            for j in range (nmb_c[0]) :
                 for l in range (j+1, nmb_c[0]) :
 
-    print(sous_manche)
+                    if main_tri[i+nmb_c[0]]!=main_tri[j] and main_tri[i+nmb_c[0]]!=main_tri[l] :
+                        sous_manche[3].append([])
+
+                        for c in range (length) :
+
+                            if c!=l and c!=j and (c>=nmb_c[0]+nmb_c[1] or main_tri[c]!=main_tri[i+nmb_c[0]]) :
+                                sous_manche[3][-1].append(main_tri[c])
+        
+        for i in range (nmb_c[0]) :     # 4 cartes différentes
+            for j in range (i+1,nmb_c[0]) :
+                for l in range (j+1,nmb_c[0]) :
+                    for k in range (l+1,nmb_c[0]) :
+                        sous_manche[3].append([])
+
+                        for c in range (length) :
+                            
+                            if not(appartient([i,j,l,k], c)) :
+                                sous_manche[3][-1].append(main_tri[c])
+
+    return sous_manche
+
+def nmb_moy(main, deck, action) :
+    """Renvois le nombre de combinaison total sur une partie commenceant par main et deck, avec les actions disponible dans action"""
+    if (action!=[False,False,False,False]):
+        nouv_deck=deck[:]
+        nouv_main=(main+[nouv_deck.pop()])[:]
+        renvois_lst=nmb_combi_tour(main,action)
+        renvois=0
+        ss_m=sous_manche(main,action)
+
+        for i in range (4) :
+            nouv_action=action[:]
+            
+            for lst in ss_m[i] :
+                nouv_action[i]=False
+                renvois += renvois_lst[i]*nmb_moy(nouv_main,nouv_deck,nouv_action)
+        
+        return renvois
+    else :
+        return 1
 
 
 
-main=[0,0,1,3,3,5,6,6,6]
-main2 = [0,0,0,2,5,6,6,0,6,6]
-print(tri_occ(main))
-sous_manche(main,[False,False,False,True])
-print(tri_occ(main2))
-sous_manche(main2,[False,False,False,True])
+
+
+# main=[0,0,1,3,3,5,6,6,6]
+# main2 = [0,0,0,2,5,6,6,0,6,6]
+# print(tri_occ(main))
+# print(sous_manche(main,[False,False,False,True]))
+# print(tri_occ(main2))
+# print(sous_manche(main2,[False,False,False,True]))
+
+print(nmb_moy([5, 5, 5, 3, 3, 3],[5,1,1,4],[True,True,True,True]))
