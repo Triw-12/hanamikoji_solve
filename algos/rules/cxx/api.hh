@@ -10,11 +10,11 @@
 #include <string>
 #include <vector>
 
-/// Les 7 geisha (2, 2, 2, 3, 3, 4, 5)
+/// Les 7 Geisha (2, 2, 2, 3, 3, 4, 5)
 #define NB_GEISHA 7
 
 /// Le nombre total de cartes (2 + 2 + 2 + 3 + 3 + 4 + 5)
-#define NB_CARTES_TOTAL 21
+#define NB_CARTES_TOTALES 21
 
 /// Le nombre de cartes que chaque personne a au début
 #define NB_CARTES_DEBUT 6
@@ -22,20 +22,20 @@
 /// Le nombre de cartes écartées au début du jeu
 #define NB_CARTES_ECARTEES 1
 
-/// Le nombre total d'action que chaque joueur devra faire
+/// Le nombre total d'actions que chaque joueur devra faire
 #define NB_ACTIONS 4
 
 /// Le nombre total de manches avant la fin de la partie
 #define NB_MANCHES_MAX 3
 
-/// La valeur (et le nombre de cartes) de chaque geisha séparée par des |
+/// La valeur (et le nombre de cartes) de chaque Geisha séparée par des |
 #define GEISHA_VALEUR "2|2|2|3|3|4|5"
 
 /// Les actions de jeu
 typedef enum action
 {
     VALIDER, ///< Valide une unique carte
-    DEFAUSSER, ///< Defausse deux cartes
+    DEFAUSSER, ///< Défausse deux cartes
     CHOIX_TROIS, ///< Donne le choix entre trois cartes
     CHOIX_PAQUETS, ///< Donne le choix entre deux paquets de deux cartes
     PREMIER_JOUEUR, ///< Aucune action n'a été jouée (utilisé dans tour_precedent)
@@ -48,9 +48,9 @@ typedef enum error
     ACTION_DEJA_JOUEE, ///< l'action a déjà été jouée
     CARTES_INVALIDES, ///< vous ne pouvez pas jouer ces cartes
     PAQUET_INVALIDE, ///< ce paquet n'existe pas
-    GEISHA_INVALIDES, ///< cette geisha n'existe pas (doit être un entier entre 0 et NB_GEISHA)
+    GEISHA_INVALIDES, ///< cette Geisha n'existe pas (doit être un entier entre 0 et NB_GEISHA - 1)
     JOUEUR_INVALIDE, ///< ce joueur n'existe pas
-    CHOIX_INVALIDE, ///< vous ne pouvez pas repondre à ce choix
+    CHOIX_INVALIDE, ///< vous ne pouvez pas répondre à ce choix
     ACTION_INVALIDE, ///< vous ne pouvez pas jouer cette action maintenant
 } error;
 
@@ -78,32 +78,33 @@ joueur id_joueur();
 /// Renvoie l'identifiant de l'adversaire
 joueur id_adversaire();
 
-/// Renvoie le numéro de la manche
+/// Renvoie le numéro de la manche (entre 0 et 2)
 int manche();
 
-/// Renvoie le numéro de la manche
+/// Renvoie le numéro du tour (entre 0 et 7)
 int tour();
 
 /// Renvoie l'action jouée par l'adversaire
 action_jouee tour_precedent();
 
-/// Renvoie le nombre de carte validée par le joueur pour la geisha
-int nb_carte_validee(joueur j, int g);
+/// Renvoie le nombre de cartes validées par le joueur pour la Geisha (la carte
+/// validée secrètement n'est pas prise en compte)
+int nb_cartes_validees(joueur j, int g);
 
-/// Renvoie qui possède la geisha
+/// Renvoie qui possède la Geisha
 joueur possession_geisha(int g);
 
 /// Renvoie si l'action a déjà été jouée par le joueur
 bool est_jouee_action(joueur j, action a);
 
-/// Renvoie le nombre de carte que le joueur a
+/// Renvoie le nombre de cartes que le joueur a
 int nb_cartes(joueur j);
 
 /// Renvoie les cartes que vous avez
 std::vector<int> cartes_en_main();
 
-/// Renvoie la carte que vous avez pioché au début du tour
-int carte_pioche();
+/// Renvoie la carte que vous avez piochée au début du tour
+int carte_piochee();
 
 /// Jouer l'action valider une carte
 error action_valider(int c);

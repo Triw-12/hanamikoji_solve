@@ -12,12 +12,12 @@ id_adversaire,
 manche,
 tour,
 tour_precedent,
-nb_carte_validee,
+nb_cartes_validees,
 possession_geisha,
 est_jouee_action,
 nb_cartes,
 cartes_en_main,
-carte_pioche,
+carte_piochee,
 action_valider,
 action_defausser,
 action_choix_trois,
@@ -30,7 +30,7 @@ afficher_joueur,
 afficher_action_jouee,
 
 nb_geisha,
-nb_cartes_total,
+nb_cartes_totales,
 nb_cartes_debut,
 nb_cartes_ecartees,
 nb_actions,
@@ -41,13 +41,13 @@ geisha_valeur,
 import CApi
 
 
--- Les 7 geisha (2, 2, 2, 3, 3, 4, 5)
+-- Les 7 Geisha (2, 2, 2, 3, 3, 4, 5)
 nb_geisha :: Int
 nb_geisha = 7
 
 -- Le nombre total de cartes (2 + 2 + 2 + 3 + 3 + 4 + 5)
-nb_cartes_total :: Int
-nb_cartes_total = 21
+nb_cartes_totales :: Int
+nb_cartes_totales = 21
 
 -- Le nombre de cartes que chaque personne a au début
 nb_cartes_debut :: Int
@@ -57,7 +57,7 @@ nb_cartes_debut = 6
 nb_cartes_ecartees :: Int
 nb_cartes_ecartees = 1
 
--- Le nombre total d'action que chaque joueur devra faire
+-- Le nombre total d'actions que chaque joueur devra faire
 nb_actions :: Int
 nb_actions = 4
 
@@ -65,6 +65,6 @@ nb_actions = 4
 nb_manches_max :: Int
 nb_manches_max = 3
 
--- La valeur (et le nombre de cartes) de chaque geisha séparée par des |
+-- La valeur (et le nombre de cartes) de chaque Geisha séparée par des |
 geisha_valeur :: String
 geisha_valeur = "2|2|2|3|3|4|5"

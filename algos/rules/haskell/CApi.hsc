@@ -87,7 +87,7 @@ instance ApiStorable String where
 -- Les actions de jeu
 data Action =
     Valider -- Valide une unique carte
-  | Defausser -- Defausse deux cartes
+  | Defausser -- Défausse deux cartes
   | Choix_trois -- Donne le choix entre trois cartes
   | Choix_paquets -- Donne le choix entre deux paquets de deux cartes
   | Premier_joueur -- Aucune action n'a été jouée (utilisé dans tour_precedent)
@@ -113,9 +113,9 @@ data Error =
   | Action_deja_jouee -- l'action a déjà été jouée
   | Cartes_invalides -- vous ne pouvez pas jouer ces cartes
   | Paquet_invalide -- ce paquet n'existe pas
-  | Geisha_invalides -- cette geisha n'existe pas (doit être un entier entre 0 et NB_GEISHA)
+  | Geisha_invalides -- cette Geisha n'existe pas (doit être un entier entre 0 et NB_GEISHA - 1)
   | Joueur_invalide -- ce joueur n'existe pas
-  | Choix_invalide -- vous ne pouvez pas repondre à ce choix
+  | Choix_invalide -- vous ne pouvez pas répondre à ce choix
   | Action_invalide -- vous ne pouvez pas jouer cette action maintenant
   deriving(Show, Eq, Enum)
 type CError = CInt
@@ -300,14 +300,14 @@ id_adversaire = (hs_id_adversaire ) >>= unStorable
 
 foreign import ccall
   hs_id_adversaire ::  IO (ApiStorableType Joueur)
--- Renvoie le numéro de la manche
+-- Renvoie le numéro de la manche (entre 0 et 2)
 manche ::IO Int
 manche = (hs_manche ) >>= unStorable
 
 
 foreign import ccall
   hs_manche ::  IO (ApiStorableType Int)
--- Renvoie le numéro de la manche
+-- Renvoie le numéro du tour (entre 0 et 7)
 tour ::IO Int
 tour = (hs_tour ) >>= unStorable
 
@@ -321,14 +321,15 @@ tour_precedent = (hs_tour_precedent ) >>= unStorable
 
 foreign import ccall
   hs_tour_precedent ::  IO (ApiStorableType Action_jouee)
--- Renvoie le nombre de carte validée par le joueur pour la geisha
-nb_carte_validee :: Joueur ->  Int -> IO Int
-nb_carte_validee j  g  = toStorable j $ \j' ->  toStorable g $ \g' ->  (hs_nb_carte_validee  j' g') >>= unStorable
+-- Renvoie le nombre de cartes validées par le joueur pour la Geisha (la carte
+-- validée secrètement n'est pas prise en compte)
+nb_cartes_validees :: Joueur ->  Int -> IO Int
+nb_cartes_validees j  g  = toStorable j $ \j' ->  toStorable g $ \g' ->  (hs_nb_cartes_validees  j' g') >>= unStorable
 
 
 foreign import ccall
-  hs_nb_carte_validee ::  (ApiStorableType Joueur) -> (ApiStorableType Int) -> IO (ApiStorableType Int)
--- Renvoie qui possède la geisha
+  hs_nb_cartes_validees ::  (ApiStorableType Joueur) -> (ApiStorableType Int) -> IO (ApiStorableType Int)
+-- Renvoie qui possède la Geisha
 possession_geisha :: Int -> IO Joueur
 possession_geisha g  = toStorable g $ \g' ->  (hs_possession_geisha  g') >>= unStorable
 
@@ -342,7 +343,7 @@ est_jouee_action j  a  = toStorable j $ \j' ->  toStorable a $ \a' ->  (hs_est_j
 
 foreign import ccall
   hs_est_jouee_action ::  (ApiStorableType Joueur) -> (ApiStorableType Action) -> IO (ApiStorableType Bool)
--- Renvoie le nombre de carte que le joueur a
+-- Renvoie le nombre de cartes que le joueur a
 nb_cartes :: Joueur -> IO Int
 nb_cartes j  = toStorable j $ \j' ->  (hs_nb_cartes  j') >>= unStorable
 
@@ -356,13 +357,13 @@ cartes_en_main = (hs_cartes_en_main ) >>= unStorable
 
 foreign import ccall
   hs_cartes_en_main ::  IO (ApiStorableType [Int])
--- Renvoie la carte que vous avez pioché au début du tour
-carte_pioche ::IO Int
-carte_pioche = (hs_carte_pioche ) >>= unStorable
+-- Renvoie la carte que vous avez piochée au début du tour
+carte_piochee ::IO Int
+carte_piochee = (hs_carte_piochee ) >>= unStorable
 
 
 foreign import ccall
-  hs_carte_pioche ::  IO (ApiStorableType Int)
+  hs_carte_piochee ::  IO (ApiStorableType Int)
 -- Jouer l'action valider une carte
 action_valider :: Int -> IO Error
 action_valider c  = toStorable c $ \c' ->  (hs_action_valider  c') >>= unStorable

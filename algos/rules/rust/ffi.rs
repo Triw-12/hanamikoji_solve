@@ -360,12 +360,12 @@ extern {
     pub fn manche() -> c_int;
     pub fn tour() -> c_int;
     pub fn tour_precedent() -> ActionJouee;
-    pub fn nb_carte_validee(j: Joueur, g: c_int) -> c_int;
+    pub fn nb_cartes_validees(j: Joueur, g: c_int) -> c_int;
     pub fn possession_geisha(g: c_int) -> Joueur;
     pub fn est_jouee_action(j: Joueur, a: Action) -> c_bool;
     pub fn nb_cartes(j: Joueur) -> c_int;
     pub fn cartes_en_main() -> Array<c_int>;
-    pub fn carte_pioche() -> c_int;
+    pub fn carte_piochee() -> c_int;
     pub fn action_valider(c: c_int) -> Error;
     pub fn action_defausser(c1: c_int, c2: c_int) -> Error;
     pub fn action_choix_trois(c1: c_int, c2: c_int, c3: c_int) -> Error;

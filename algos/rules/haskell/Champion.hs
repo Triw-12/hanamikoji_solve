@@ -20,7 +20,7 @@ jouer_tour = return () -- TODO
 repondre_action_choix_trois :: IO ()
 repondre_action_choix_trois = return () -- TODO
 
--- Fonction appelée lors du choix entre deux paquet lors de l'action de
+-- Fonction appelée lors du choix entre deux paquets lors de l'action de
 -- l'adversaire (cf tour_precedent)
 repondre_action_choix_paquets :: IO ()
 repondre_action_choix_paquets = return () -- TODO

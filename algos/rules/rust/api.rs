@@ -16,11 +16,11 @@ use crate::ffi::{array_of_borrow_to_c, CToRust, RustToC};
 #[allow(unused_imports)]
 use std::{cell::UnsafeCell, borrow::Borrow};
 
-/// Les 7 geisha (2, 2, 2, 3, 3, 4, 5)
+/// Les 7 Geisha (2, 2, 2, 3, 3, 4, 5)
 pub const NB_GEISHA: i32 = 7;
 
 /// Le nombre total de cartes (2 + 2 + 2 + 3 + 3 + 4 + 5)
-pub const NB_CARTES_TOTAL: i32 = 21;
+pub const NB_CARTES_TOTALES: i32 = 21;
 
 /// Le nombre de cartes que chaque personne a au début
 pub const NB_CARTES_DEBUT: i32 = 6;
@@ -28,13 +28,13 @@ pub const NB_CARTES_DEBUT: i32 = 6;
 /// Le nombre de cartes écartées au début du jeu
 pub const NB_CARTES_ECARTEES: i32 = 1;
 
-/// Le nombre total d'action que chaque joueur devra faire
+/// Le nombre total d'actions que chaque joueur devra faire
 pub const NB_ACTIONS: i32 = 4;
 
 /// Le nombre total de manches avant la fin de la partie
 pub const NB_MANCHES_MAX: i32 = 3;
 
-/// La valeur (et le nombre de cartes) de chaque geisha séparée par des |
+/// La valeur (et le nombre de cartes) de chaque Geisha séparée par des |
 pub const GEISHA_VALEUR: &'static str = "2|2|2|3|3|4|5";
 
 /// Les actions de jeu
@@ -42,7 +42,7 @@ pub const GEISHA_VALEUR: &'static str = "2|2|2|3|3|4|5";
 pub enum Action {
     /// Valide une unique carte
     Valider,
-    /// Defausse deux cartes
+    /// Défausse deux cartes
     Defausser,
     /// Donne le choix entre trois cartes
     ChoixTrois,
@@ -63,11 +63,12 @@ pub enum Error {
     CartesInvalides,
     /// ce paquet n'existe pas
     PaquetInvalide,
-    /// cette geisha n'existe pas (doit être un entier entre 0 et NB_GEISHA)
+    /// cette Geisha n'existe pas (doit être un entier entre 0 et NB_GEISHA -
+    /// 1)
     GeishaInvalides,
     /// ce joueur n'existe pas
     JoueurInvalide,
-    /// vous ne pouvez pas repondre à ce choix
+    /// vous ne pouvez pas répondre à ce choix
     ChoixInvalide,
     /// vous ne pouvez pas jouer cette action maintenant
     ActionInvalide,
@@ -116,14 +117,14 @@ pub fn id_adversaire() -> Joueur {
     }
 }
 
-/// Renvoie le numéro de la manche
+/// Renvoie le numéro de la manche (entre 0 et 2)
 pub fn manche() -> i32 {
     unsafe {
         ffi::manche().to_rust()
     }
 }
 
-/// Renvoie le numéro de la manche
+/// Renvoie le numéro du tour (entre 0 et 7)
 pub fn tour() -> i32 {
     unsafe {
         ffi::tour().to_rust()
@@ -137,23 +138,24 @@ pub fn tour_precedent() -> ActionJouee {
     }
 }
 
-/// Renvoie le nombre de carte validée par le joueur pour la geisha
+/// Renvoie le nombre de cartes validées par le joueur pour la Geisha (la carte
+/// validée secrètement n'est pas prise en compte)
 ///
 /// ### Parameters
 ///  - `j`: Le joueur
-///  - `g`: La geisha
-pub fn nb_carte_validee(j: Joueur, g: i32) -> i32 {
+///  - `g`: La Geisha
+pub fn nb_cartes_validees(j: Joueur, g: i32) -> i32 {
     unsafe {
         let j = j.to_c();
         let g = g.to_c();
-        ffi::nb_carte_validee(j, g).to_rust()
+        ffi::nb_cartes_validees(j, g).to_rust()
     }
 }
 
-/// Renvoie qui possède la geisha
+/// Renvoie qui possède la Geisha
 ///
 /// ### Parameters
-///  - `g`: La geisha
+///  - `g`: La Geisha
 pub fn possession_geisha(g: i32) -> Joueur {
     unsafe {
         let g = g.to_c();
@@ -174,7 +176,7 @@ pub fn est_jouee_action(j: Joueur, a: Action) -> bool {
     }
 }
 
-/// Renvoie le nombre de carte que le joueur a
+/// Renvoie le nombre de cartes que le joueur a
 ///
 /// ### Parameters
 ///  - `j`: Le joueur
@@ -192,10 +194,10 @@ pub fn cartes_en_main() -> Vec<i32> {
     }
 }
 
-/// Renvoie la carte que vous avez pioché au début du tour
-pub fn carte_pioche() -> i32 {
+/// Renvoie la carte que vous avez piochée au début du tour
+pub fn carte_piochee() -> i32 {
     unsafe {
-        ffi::carte_pioche().to_rust()
+        ffi::carte_piochee().to_rust()
     }
 }
 

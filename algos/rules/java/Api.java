@@ -9,7 +9,7 @@ enum Action {
      */
     VALIDER,
     /**
-     * Defausse deux cartes
+     * Défausse deux cartes
      */
     DEFAUSSER,
     /**
@@ -47,7 +47,7 @@ enum Error {
      */
     PAQUET_INVALIDE,
     /**
-     * cette geisha n'existe pas (doit être un entier entre 0 et NB_GEISHA)
+     * cette Geisha n'existe pas (doit être un entier entre 0 et NB_GEISHA - 1)
      */
     GEISHA_INVALIDES,
     /**
@@ -55,7 +55,7 @@ enum Error {
      */
     JOUEUR_INVALIDE,
     /**
-     * vous ne pouvez pas repondre à ce choix
+     * vous ne pouvez pas répondre à ce choix
      */
     CHOIX_INVALIDE,
     /**
@@ -113,14 +113,14 @@ class ActionJouee {
 public class Api
 {
     /**
-     * Les 7 geisha (2, 2, 2, 3, 3, 4, 5)
+     * Les 7 Geisha (2, 2, 2, 3, 3, 4, 5)
      */
     public static final int NB_GEISHA = 7;
 
     /**
      * Le nombre total de cartes (2 + 2 + 2 + 3 + 3 + 4 + 5)
      */
-    public static final int NB_CARTES_TOTAL = 21;
+    public static final int NB_CARTES_TOTALES = 21;
 
     /**
      * Le nombre de cartes que chaque personne a au début
@@ -133,7 +133,7 @@ public class Api
     public static final int NB_CARTES_ECARTEES = 1;
 
     /**
-     * Le nombre total d'action que chaque joueur devra faire
+     * Le nombre total d'actions que chaque joueur devra faire
      */
     public static final int NB_ACTIONS = 4;
 
@@ -143,7 +143,7 @@ public class Api
     public static final int NB_MANCHES_MAX = 3;
 
     /**
-     * La valeur (et le nombre de cartes) de chaque geisha séparée par des |
+     * La valeur (et le nombre de cartes) de chaque Geisha séparée par des |
      */
     public static final String GEISHA_VALEUR = "2|2|2|3|3|4|5";
 
@@ -158,12 +158,12 @@ public class Api
     public static native Joueur id_adversaire();
 
     /**
-     * Renvoie le numéro de la manche
+     * Renvoie le numéro de la manche (entre 0 et 2)
      */
     public static native int manche();
 
     /**
-     * Renvoie le numéro de la manche
+     * Renvoie le numéro du tour (entre 0 et 7)
      */
     public static native int tour();
 
@@ -173,12 +173,13 @@ public class Api
     public static native ActionJouee tour_precedent();
 
     /**
-     * Renvoie le nombre de carte validée par le joueur pour la geisha
+     * Renvoie le nombre de cartes validées par le joueur pour la Geisha (la
+     * carte validée secrètement n'est pas prise en compte)
      */
-    public static native int nb_carte_validee(Joueur j, int g);
+    public static native int nb_cartes_validees(Joueur j, int g);
 
     /**
-     * Renvoie qui possède la geisha
+     * Renvoie qui possède la Geisha
      */
     public static native Joueur possession_geisha(int g);
 
@@ -188,7 +189,7 @@ public class Api
     public static native boolean est_jouee_action(Joueur j, Action a);
 
     /**
-     * Renvoie le nombre de carte que le joueur a
+     * Renvoie le nombre de cartes que le joueur a
      */
     public static native int nb_cartes(Joueur j);
 
@@ -198,9 +199,9 @@ public class Api
     public static native int[] cartes_en_main();
 
     /**
-     * Renvoie la carte que vous avez pioché au début du tour
+     * Renvoie la carte que vous avez piochée au début du tour
      */
-    public static native int carte_pioche();
+    public static native int carte_piochee();
 
     /**
      * Jouer l'action valider une carte

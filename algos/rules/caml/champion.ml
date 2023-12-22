@@ -27,7 +27,7 @@ let repondre_action_choix_trois () : unit =
     flush stdout
 
 let repondre_action_choix_paquets () : unit =
-(** Fonction appelée lors du choix entre deux paquet lors de l'action de
+(** Fonction appelée lors du choix entre deux paquets lors de l'action de
  ** l'adversaire (cf tour_precedent) *)
     (* TODO *)
 
