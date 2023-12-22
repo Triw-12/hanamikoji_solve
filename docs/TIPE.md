@@ -92,11 +92,11 @@ Retourne un majorant du nombre de noeuds dans le graphe, le nombre de tour de bo
 
 ### Deuxième approche (Jason)
 
-* Permet de ne pas en prendre en compte les doublons et d'avoir le nombre exacte de combinaison d'un joueur. Permet ainsi d'avoir la valeur moyenne de combiannaison d'une manche et donc d'une partie.
+* Permet de ne pas en prendre en compte les doublons et d'avoir le nombre exacte de combinaison d'un joueur. Permet ainsi d'avoir la valeur moyenne de combinaison d'une manche et donc d'une partie.
 
 * Calcule des sous-manches à partir de la composition d'une partie
   * Utilisation de liste triée de manière à avoir dans l'ordre: les éléments uniques, les doublons, les triplés et les quadruplés ou plus.
-  * Enlève le nombre de carte adéquate celon les actions possibles.
+  * Enlève le nombre de carte adéquate selon les actions possibles.
 * Calcule récursivement le nombre de combinaison total.
 
 ### Difficultés
@@ -109,6 +109,8 @@ Impossible de faire cet algorithme (beaucoup trop long) alors que on essaye de j
 
 ## Algo déterministe efficace
 
+### Principe général
+
 On connaît et on suit la progression des cartes dans sa main, sur le jeu et celles dont on ne sait pas où elles sont.
 
 * Pour chaque coup que l'on peut jouer:
@@ -117,3 +119,15 @@ On connaît et on suit la progression des cartes dans sa main, sur le jeu et cel
   * On fait la moyenne pour ce coup
   * On regarde le max des points que l'on a
 * On joue le coup qui maximise le nombre de points.
+
+### Optimisation
+
+On a à la fin 3 possibilités où peuvent se retrouver les cartes :
+
+* Chez soi
+* Chez l'adversaire
+* Défaussés
+
+On peut éliminer des choix pour avoir une estimation plus précise en éliminant les cas impossibles :
+
+* Pour tous les nombres possibles dans sa main qui sera joué, on prend les combinaisons associés et on complète avec les combinaisons des cartes que l'on a pas encore vu.
