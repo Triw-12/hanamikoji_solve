@@ -88,7 +88,7 @@ def combi_to_nmb (lst) :
 
 
 def sous_manche (main, action) :
-    """ Renvoie le nombre de sous manche à partir de main et avec la liste d'action représentée par action"""
+    """ Renvoie les sous manche à partir de main et avec la liste d'action représentée par action"""
 
     main_tri=tri_occ(main)
     nmb_c=combi_to_nmb(main)
@@ -272,6 +272,11 @@ def nmb_moy(main, deck, action) :
 # print(tri_occ(main2))
 # print(sous_manche(main2,[False,False,False,True]))
 
-print(nmb_moy([2, 4, 5, 3, 2, 1],[1,6,4,5],[True,True,True,True]))
+sm = sous_manche ([1,2,3,4,5,6,7],[True,False,False,False])
+
+for ssm in sm :
+    for m in ssm :
+        print("G ou P, 1, 1, ",m)
+
 
 #print(nmb_combi_tour([5,5,5,4,4,2],[True,True,True,True]))
