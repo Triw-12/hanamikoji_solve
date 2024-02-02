@@ -19,12 +19,21 @@ typedef struct etat
 typedef struct game
 {
     int *cartes;
+    int en_main;
     int defausse1;
     int defausse2;
     int valide;
     bool *act_poss;
     int *avantage;
 } GAME;
+
+typedef struct marqueurs
+{
+    int k;
+    int n;
+    int *cartes;
+    int *pointeurs;
+} marq;
 
 GAME g;
 int manche_accu = -1;
@@ -39,6 +48,7 @@ void tri_cartes(int_array lc)
     for (int j = 0; j < lc.length; j++)
     {
         g.cartes[lc.items[j]] += 1;
+        g.en_main += 1;
     }
 }
 
@@ -50,6 +60,7 @@ void update(void)
         g.defausse1 = -1;
         g.defausse2 = -1;
         g.valide = -1;
+        g.en_main = 0;
         for (int i = 0; i < 7; i++)
         {
             poss = possession_geisha(i);
@@ -78,6 +89,7 @@ void update(void)
         action_jouee jouee = tour_precedent();
         int pioche = carte_pioche();
         g.cartes[pioche] += 1;
+        g.en_main += 1;
     }
 }
 
@@ -85,6 +97,7 @@ void joue_valide(int c)
 {
     g.act_poss[0] = false;
     g.cartes[c] -= 1;
+    g.en_main -= 1;
     g.valide = c;
     error e = action_valider(c);
     if (e == OK)
@@ -102,6 +115,7 @@ void joue_defausse(int d1, int d2)
     g.act_poss[1] = false;
     g.cartes[d1] -= 1;
     g.cartes[d2] -= 1;
+    g.en_main -= 2;
     g.defausse1 = d1;
     g.defausse2 = d2;
     error e = action_defausser(d1, d2);
@@ -121,6 +135,7 @@ void joue_trois(int c1, int c2, int c3)
     g.cartes[c1] -= 1;
     g.cartes[c2] -= 1;
     g.cartes[c3] -= 1;
+    g.en_main -= 4;
     error e = action_choix_trois(c1, c2, c3);
     if (e == OK)
     {
@@ -139,6 +154,7 @@ void joue_quatre(int c11, int c12, int c21, int c22)
     g.cartes[c12] -= 1;
     g.cartes[c21] -= 1;
     g.cartes[c22] -= 1;
+    g.en_main -= 4;
     error e = action_choix_paquets(c11, c12, c21, c22);
     if (e == OK)
     {
@@ -147,6 +163,65 @@ void joue_quatre(int c11, int c12, int c21, int c22)
     else
     {
         printf("ERREUR : %d\n", e);
+    }
+}
+
+marq *init_marqueur(int k, int n, int *cartes)
+{
+    marq *m = malloc(sizeof(marq));
+    m->cartes = cartes;
+    m->k = k;
+    m->n = n;
+    m->pointeurs = malloc(k * sizeof(int));
+    int point = 0;
+    int carte = 0;
+    while (point < k && carte < 7)
+    {
+        for (int i = 0; i < cartes[carte] && point < k; i++)
+        {
+            m->pointeurs[point++] = carte;
+        }
+        carte++;
+    }
+    return m;
+}
+
+void choix_cartes(marq *m)
+{
+    int dernier_non_vide = m->k - 1;
+    int non_plein = 6;
+    int cpt;
+    int continuer = true;
+    while (dernier_non_vide >= 0 && continuer)
+    {
+        cpt = m->cartes[non_plein];
+        while (cpt > 0 && continuer)
+        {
+            if (m->pointeurs[dernier_non_vide] == non_plein)
+            {
+                cpt--;
+                dernier_non_vide--;
+            }
+            else
+            {
+                continuer = false;
+            }
+        }
+        non_plein--;
+    }
+    m->pointeurs[dernier_non_vide++] = non_plein;
+    for (int i = 0; i < cpt && dernier_non_vide < m->k; i++)
+    {
+        m->pointeurs[dernier_non_vide++] = non_plein;
+    }
+    non_plein++;
+    while (dernier_non_vide < m->k && non_plein < 7)
+    {
+        for (int i = 0; i < m->cartes[non_plein] && dernier_non_vide < k; i++)
+        {
+            m->pointeurs[dernier_non_vide++] = non_plein;
+        }
+        non_plein++;
     }
 }
 
@@ -164,6 +239,13 @@ void init_jeu(void)
 void jouer_tour(void)
 {
     update();
+    for (int act = 0; act < 4; act++)
+    {
+        if (g.act_poss[act])
+        {
+            /// Pour chaque couple de cartes possibles
+        }
+    }
 }
 
 // Fonction appelée lors du choix entre les trois cartes lors de l'action de
