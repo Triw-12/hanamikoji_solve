@@ -20,3 +20,15 @@ def choix_aleatoire (lst_pourc) :
 
     return choix_f
 
+def nouv_proba (Proba, R, Tc) :
+    # Renvois la nouvelle probabilite entre 0 et 100 associé à un coup qui a réusssi R fois sur Tc essais
+    coef = Tc/(R+Tc)
+    if coef < 1 :
+        Proba = Proba * coef
+    else :
+        ecar = (100 - Proba)/coef
+        Proba= 100-ecar
+    return Proba
+
+def modifie_proba (data,lst_proba_fort,lst_proba_moy,lst_proba_faible) :
+    
