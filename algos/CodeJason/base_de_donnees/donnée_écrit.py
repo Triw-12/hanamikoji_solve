@@ -6,7 +6,7 @@ ind= 0
 
 
 for cri in critère :
-    fichier = open("hanamikoji_solve\\algos\\CodeJason\\base_de_donnees\\"+critère_d[ind]+"\\donnee"+cri+".csv","w")
+    fichier = open("hanamikoji_solve\\algos\\CodeJason\\base_de_donnees\\"+critère_d[ind]+"\\donnee"+cri+".csv","x")
     fichier.write("manche,tour,nmb_carte,class_par_carte_diff,coup,nmb_positif,nmb_totaux\n")
     for tour in range (3) :
         for manche in range (4) :
