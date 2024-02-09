@@ -37,7 +37,7 @@ def nouv_proba (Proba:list, ind:int, R:int, Tc:int) :
     print(ecar)
 
     for i in range (n) :
-        Proba[i]= ceil(Proba[i] + ecar/(n+1))
+        Proba[i]= ceil(Proba[i] + ecar/(n-1))
 
     Proba[ind] = ceil(nouv_Proba)
 
