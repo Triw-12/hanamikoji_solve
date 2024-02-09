@@ -217,7 +217,7 @@ void choix_cartes(marq *m)
     non_plein++;
     while (dernier_non_vide < m->k && non_plein < 7)
     {
-        for (int i = 0; i < m->cartes[non_plein] && dernier_non_vide < k; i++)
+        for (int i = 0; i < m->cartes[non_plein] && dernier_non_vide < m->k; i++)
         {
             m->pointeurs[dernier_non_vide++] = non_plein;
         }
