@@ -63,7 +63,11 @@ void choix_cartes(marq *m)
     else
     {
         non_plein = m->pointeurs[dernier_non_vide] + 1;
-        m->pointeurs[dernier_non_vide]++;
+        while (m->cartes[non_plein] == 0)
+        {
+            non_plein++;
+        }
+        m->pointeurs[dernier_non_vide] = non_plein;
         cpt = m->cartes[m->pointeurs[dernier_non_vide]] - 1;
         dernier_non_vide++;
         // printf("e : %d %d %d\n", dernier_non_vide, non_plein, cpt);
@@ -95,14 +99,14 @@ void choix_cartes(marq *m)
 int main()
 {
     int *cartes = malloc(7 * sizeof(int));
-    cartes[0] = 1;
+    cartes[0] = 0;
     cartes[1] = 1;
-    cartes[2] = 2;
+    cartes[2] = 0;
     cartes[3] = 1;
-    cartes[4] = 0;
+    cartes[4] = 2;
     cartes[5] = 0;
-    cartes[6] = 0;
-    marq *m = init_marqueur(3, 7, cartes);
+    cartes[6] = 3;
+    marq *m = init_marqueur(4, 7, cartes);
     while (m->pointeurs != NULL)
     {
         for (int p = 0; p < m->k; p++)
