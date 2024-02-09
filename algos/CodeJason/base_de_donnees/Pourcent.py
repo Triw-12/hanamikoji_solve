@@ -20,65 +20,85 @@ def choix_aleatoire (lst_pourc) :
 
     return choix_f
 
+
+
 def nouv_proba (Proba:list, ind:int, R:int, Tc:int) :
-    # Modifie les valeurs de proba en considérant comme proba principal celle d'indice ind avec comme paramètre R réussite et Tc coup totaux
-    print(Proba)
-    coef = (2*Tc/(R+Tc)) - 1/2
-    print(coef)
+    """ Hyppothese : la somme des proba vaut 1000, aucune proba ne dépasse 1000 ou passe en dessous de 0, 0<R<Tc
+     Modifie les valeurs de proba en considérant comme proba principal celle d'indice ind avec comme paramètre R réussite et Tc coup totaux"""
+
+    coef = (R+Tc)/Tc - 0.5
     n = len(Proba)
+
+    erreur = 1000   #ecard du a l'approximation des pourcentages
+
+    somme = 1000 -Proba[ind]  #Somme des pourmilles de tout les termes différentes de ind
 
     if coef < 1 :
         nouv_Proba= Proba[ind] * coef
+    
+        ecar = Proba[ind] - nouv_Proba
+
+        for i in range (n) :
+            if i!= ind :
+                Proba[i] = ceil(Proba[i] + ecar*(Proba[i]/somme))
+                erreur = erreur - Proba[i]
+    
     else :
-        ecar = (1000 - Proba[ind])/coef
-        nouv_Proba = 1000 - ecar
+        nouv_Proba = 1000 - (1000 - Proba[ind])/coef
 
-    ecar = Proba[ind] - nouv_Proba
-    print(ecar)
+        ecar = Proba[ind] - nouv_Proba
 
-    for i in range (n) :
-        Proba[i]= ceil(Proba[i] + ecar/(n-1))
+        for i in range (n) :
+            if i!= ind :
+                Proba[i] = ceil(Proba[i] + ecar*(Proba[i]/somme))
+                erreur = erreur - Proba[i]
 
     Proba[ind] = ceil(nouv_Proba)
+    erreur = erreur - Proba[ind]
 
-    return Proba
-
-def tab_reussite (df) :
-    # Renvoie un tableau dont les cases (final) comporte les données des réussites et des totaux conservé dans df
-    lst = []
-
-    for i in range (3) :
-        lst.append([])
-        for j in range (4) :
-            lst.append([])
-
+    i =0
+    while erreur != 0:
+        if erreur < 0 :
+            Proba[i]= Proba[i] - 1
+            erreur+=1
+        else :
+            Proba[i]= Proba[i] + 1
+            erreur-=1
+        i+=1
 
 
-def modif_1lst(var,reuss) :
-    """ Hyppothese : var est soit un tupple contenant un entier entre 1 et 1000 et une liste soit un entier entre 1 et 1000,
-        reuss est soit une liste, soit un tupple de 2 entiers
-        les listes de reuss et de var doivent être de même taille
-    Modifie la probabilité de var ou des valeurs contenues dans var en fonction des données de reuss, renvois le tableau/variable avec les valeurs modifiées"""
-    
-    if type(var) == int :
-        var=nouv_proba (var,reuss[0],reuss[1])
-        return (var,reuss[0],reuss[1])
-    
+
+# def tab_reussite (df) :
+#     # Renvoie un tableau dont les cases (final) comporte les données des réussites et des totaux conservé dans df
+#     lst = []
+
+#     for i in range (3) :
+#         lst.append([])
+#         for j in range (4) :
+#             lst.append([])
+
+
+
+def modif_lst(lst_proba,lst_df) :
+    lst_reuss = []
+    lst_proba = []
+    reuss = 0
+    tot = 0
+     
+    if type(lst_proba == dict) :
+
     else :
-        reu = 0
-        tot = 0
+        n = len(lst_proba[0])
+        
+        for i in range (n):
+            renv = modif_lst(lst_proba[0][i],lst_df[i])
+            lst_reuss.append(renv[0])
+            lst_proba.append(lst_proba[0][i][1])
+            reuss += renv[0]
+            tot += renv[1]
 
-        for i in range (var[1].length):
-            renvois = modif_1lst(var[1][i],reuss[1][i])
-
-            var[1][i] = renvois[0]
-            reu+= renvois[1]
-            tot+= renvois[2]
-
-        if var[0] !=100 :
-            var[0] = nouv_proba (var[0],reu,tot)
-
-        return var
+        for i in range (n):
+            nouv_proba(lst_proba,i,lst_reuss[i],tot)
 
 
 # def modifie_proba (df,tab) :
@@ -92,4 +112,4 @@ def modif_1lst(var,reuss) :
 #             for 
 
 
-print(nouv_proba([55,132,743,70],2,10,55))
+print(nouv_proba([455,222,173,150],2,15,50))

@@ -1,2 +1,7 @@
-t = (2,5)
-print(t[1]//2)
+def modifie (lst) :
+    lst[0]=3
+
+
+t = [2,5]
+modifie(t)
+print(t[0])
