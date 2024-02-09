@@ -79,26 +79,29 @@ def nouv_proba (Proba:list, ind:int, R:int, Tc:int) :
 
 
 
-def modif_lst(lst_proba,lst_df) :
+def modif_lst(lst_dico,lst_df) :
     lst_reuss = []
     lst_proba = []
     reuss = 0
     tot = 0
      
-    if type(lst_proba == dict) :
+    if type(lst_proba[0] == dict) :
 
     else :
         n = len(lst_proba[0])
-        
+
         for i in range (n):
-            renv = modif_lst(lst_proba[0][i],lst_df[i])
+            renv = modif_lst(lst_dico[0][i],lst_df[i])
             lst_reuss.append(renv[0])
-            lst_proba.append(lst_proba[0][i][1])
+            lst_proba.append(lst_dico[0][i][1])
             reuss += renv[0]
             tot += renv[1]
 
         for i in range (n):
             nouv_proba(lst_proba,i,lst_reuss[i],tot)
+    
+    
+    return reuss,tot
 
 
 # def modifie_proba (df,tab) :
