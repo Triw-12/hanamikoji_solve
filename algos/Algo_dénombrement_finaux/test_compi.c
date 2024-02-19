@@ -99,13 +99,13 @@ void choix_cartes(marq *m)
 int main()
 {
     int *cartes = malloc(7 * sizeof(int));
-    cartes[0] = 0;
+    cartes[0] = 3;
     cartes[1] = 1;
     cartes[2] = 0;
-    cartes[3] = 1;
-    cartes[4] = 2;
-    cartes[5] = 0;
-    cartes[6] = 3;
+    cartes[3] = 0;
+    cartes[4] = 0;
+    cartes[5] = 2;
+    cartes[6] = 1;
     marq *m = init_marqueur(4, 7, cartes);
     while (m->pointeurs != NULL)
     {
