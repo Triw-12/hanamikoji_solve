@@ -1,7 +1,15 @@
-def modifie (lst) :
-    lst[0]=3
+def modif(d) :
+    lst_d = list(d.items())
+    for i in range (4) :
+        lst_d[i] = (i,i)
+    print(lst_d)
+    d.update(lst_d)
+    
+    
 
-
-t = [2,5]
-modifie(t)
-print(t[0])
+d = {0 : 3, 1 : 4, 2 : 10, 3 : 0}
+f =(1,0)
+print((1,0)[1])
+print(d)
+modif(d)
+print(d)
