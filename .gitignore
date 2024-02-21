@@ -54,3 +54,4 @@ dkms.conf
 # Autre
 diaporama/.~lock.Règles.odp#
 .vscode
+*.zip
