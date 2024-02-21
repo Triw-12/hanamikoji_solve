@@ -31,38 +31,38 @@ def nouv_proba (Proba:list, ind:int, R:int, Tc:int) :
 
     erreur = 1000   #ecard du a l'approximation des pourcentages
 
-    somme = 1000 -Proba[ind]  #Somme des pourmilles de tout les termes différentes de ind
+    somme = 1000 -Proba[ind][1]  #Somme des pourmilles de tout les termes différentes de ind
 
     if coef < 1 :
-        nouv_Proba= Proba[ind] * coef
+        nouv_Proba= Proba[ind][1] * coef
     
-        ecar = Proba[ind] - nouv_Proba
+        ecar = Proba[ind][1] - nouv_Proba
 
         for i in range (n) :
             if i!= ind :
-                Proba[i] = ceil(Proba[i] + ecar*(Proba[i]/somme))
-                erreur = erreur - Proba[i]
+                Proba[i][1] = ceil(Proba[i][1] + ecar*(Proba[i][1]/somme))
+                erreur = erreur - Proba[i][1]
     
     else :
-        nouv_Proba = 1000 - (1000 - Proba[ind])/coef
+        nouv_Proba = 1000 - (1000 - Proba[ind][1])/coef
 
-        ecar = Proba[ind] - nouv_Proba
+        ecar = Proba[ind][1] - nouv_Proba
 
         for i in range (n) :
             if i!= ind :
-                Proba[i] = ceil(Proba[i] + ecar*(Proba[i]/somme))
-                erreur = erreur - Proba[i]
+                Proba[i][1] = ceil(Proba[i][1] + ecar*(Proba[i][1]/somme))
+                erreur = erreur - Proba[i][1]
 
-    Proba[ind] = ceil(nouv_Proba)
-    erreur = erreur - Proba[ind]
+    Proba[ind][1] = ceil(nouv_Proba)
+    erreur = erreur - Proba[ind][1]
 
     i =0
     while erreur != 0:
         if erreur < 0 :
-            Proba[i]= Proba[i] - 1
+            Proba[i][1]= Proba[i][1] - 1
             erreur+=1
         else :
-            Proba[i]= Proba[i] + 1
+            Proba[i][1]= Proba[i][1] + 1
             erreur-=1
         i+=1
 
@@ -77,31 +77,40 @@ def nouv_proba (Proba:list, ind:int, R:int, Tc:int) :
 #         for j in range (4) :
 #             lst.append([])
 
+def modif_dico(dico, reuss) :
+    lst_combi = list(dico.items())
+    for i in range (len (lst_combi)) :
+        lst_combi[i] = list(lst_combi[i])
+    for i in range (len(lst_combi)) :
+        nouv_proba(lst_combi,i,reuss.get(lst_combi[i][0])[0],reuss.get(lst_combi[i][0])[1])
+    dico.update(lst_combi)
+    
 
 
-def modif_lst(lst_dico,lst_df) :
-    lst_reuss = []
-    lst_proba = []
-    reuss = 0
-    tot = 0
+# def modif_lst(lst_dico,lst_df) :
+#     lst_reuss = []
+#     lst_proba = []
+#     reuss = 0
+#     tot = 0
      
-    if type(lst_proba[0] == dict) :
+#     if type(lst_proba[0] == dict) :
+        
 
-    else :
-        n = len(lst_proba[0])
+#     else :
+#         n = len(lst_proba[0])
 
-        for i in range (n):
-            renv = modif_lst(lst_dico[0][i],lst_df[i])
-            lst_reuss.append(renv[0])
-            lst_proba.append(lst_dico[0][i][1])
-            reuss += renv[0]
-            tot += renv[1]
+#         for i in range (n):
+#             renv = modif_lst(lst_dico[0][i],lst_df[i])
+#             lst_reuss.append(renv[0])
+#             lst_proba.append(lst_dico[0][i][1])
+#             reuss += renv[0]
+#             tot += renv[1]
 
-        for i in range (n):
-            nouv_proba(lst_proba,i,lst_reuss[i],tot)
+#         for i in range (n):
+#             nouv_proba(lst_proba,i,lst_reuss[i],tot)
     
     
-    return reuss,tot
+#     return reuss,tot
 
 
 # def modifie_proba (df,tab) :
@@ -114,5 +123,8 @@ def modif_lst(lst_dico,lst_df) :
 #             diff_t = 0
 #             for 
 
+dico = {0 : 200, 1 : 200, 2 : 200, 3 : 200, 4 : 200}
+dico_m = { 0: (10,50), 1: (5,20), 2: (30,100), 3: (40,150), 4: (1,2)}
 
-print(nouv_proba([455,222,173,150],2,15,50))
+modif_dico(dico,dico_m)
+print(dico)
