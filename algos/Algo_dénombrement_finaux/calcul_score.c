@@ -1,5 +1,7 @@
 #include "calcul_score.h"
 
+int valeur_c[7] = {2, 2, 2, 3, 3, 4, 5};
+
 bool verif_score_final(int *valide_moi, int *valide_adv)
 {
     int cpt_moi = 0;
@@ -9,12 +11,12 @@ bool verif_score_final(int *valide_moi, int *valide_adv)
     {
         cpt_moi += valide_moi[i];
         cpt_adv += valide_adv[i];
-        if (valide_moi[i] > valeur[i])
+        if (valide_moi[i] > valeur_c[i])
         {
             printf("TROP DE CARTES DE MEME VALEUR DE MON COTE POUR LA COULEUR %d : %d!\n", i, valide_moi[i]);
             possible = false;
         }
-        if (valide_adv[i] > valeur[i])
+        if (valide_adv[i] > valeur_c[i])
         {
             printf("TROP DE CARTES DE MEME VALEUR DU COTE ADVERSE POUR LA COULEUR %d : %d!\n", i, valide_adv[i]);
             possible = false;
@@ -41,19 +43,19 @@ D_INT score(int *valide_moi, int *valide_adv, int *avantage)
     {
         if (valide_moi[i] > valide_adv[i])
         {
-            res.moi += valeur[i];
+            res.moi += valeur_c[i];
         }
         else if (valide_adv[i] > valide_moi[i])
         {
-            res.adv += valeur[i];
+            res.adv += valeur_c[i];
         }
         else if (avantage[i] == 1)
         {
-            res.moi += valeur[i];
+            res.moi += valeur_c[i];
         }
         else if (avantage[i] == -1)
         {
-            res.adv += valeur[i];
+            res.adv += valeur_c[i];
         }
     }
     return res;

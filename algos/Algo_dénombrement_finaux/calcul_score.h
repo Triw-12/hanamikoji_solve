@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <assert.h>
 
-int valeur[7] = {2, 2, 2, 3, 3, 4, 5};
 typedef struct double_int
 {
     int moi; // Sommme

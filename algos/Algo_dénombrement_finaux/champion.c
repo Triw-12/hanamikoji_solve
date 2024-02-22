@@ -44,13 +44,14 @@ int manche_accu = -1;
 joueur moi;
 joueur adv;
 
+int valeur_couleur[7] = {2, 2, 2, 3, 3, 4, 5};
 int permu_trois[3][2] = {{1, 2}, {0, 2}, {0, 1}};
 
 void toutes_les_cartes(int *ens_cartes)
 {
     for (int i = 0; i < 7; i++)
     {
-        ens_cartes[i] = valeur[i];
+        ens_cartes[i] = valeur_couleur[i];
     }
 }
 
@@ -68,8 +69,8 @@ void update_cartes_valides(void)
     g.nb_restantes = 0;
     for (int i = 0; i < 7; i++)
     {
-        g.etat->valide_moi[i] = nb_carte_validee(moi, i);
-        g.etat->valide_adv[i] = nb_carte_validee(adv, i);
+        g.etat->valide_moi[i] = nb_cartes_validees(moi, i);
+        g.etat->valide_adv[i] = nb_cartes_validees(adv, i);
         g.restantes[i] = g.restantes[i] - g.etat->valide_moi[i] - g.etat->valide_adv[i] - g.cartes[i];
         g.nb_restantes += g.restantes[i];
     }
@@ -126,7 +127,7 @@ void update(void)
     }
     else
     {
-        int pioche = carte_pioche();
+        int pioche = carte_piochee();
         g.cartes[pioche] += 1;
         g.en_main += 1;
         update_cartes_valides();
@@ -365,7 +366,7 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
 // Fonction appelée au début du jeu
 void init_jeu(void)
 {
-    printf("Début\n");
+    printf("Debut\n");
     g.cartes = malloc(7 * sizeof(int));
     g.etat = malloc(sizeof(ETAT));
     g.etat->valide_adv = malloc(7 * sizeof(int));
@@ -392,6 +393,10 @@ void jouer_tour(void)
     float score_maxi = -50;
     COUP coup_maxi;
     coup_maxi.cartes = malloc(4 * sizeof(int));
+    coup_maxi.cartes[0] = -1;
+    coup_maxi.cartes[1] = -1;
+    coup_maxi.cartes[2] = -1;
+    coup_maxi.cartes[3] = -1;
     float res;
 
     marq *tour_simu;
@@ -452,6 +457,10 @@ void jouer_tour(void)
     float score_mini;
     COUP coup_mini;
     coup_mini.cartes = malloc(4 * sizeof(int));
+    coup_mini.cartes[0] = -1;
+    coup_mini.cartes[1] = -1;
+    coup_mini.cartes[2] = -1;
+    coup_mini.cartes[3] = -1;
     if (g.act_poss[2])
     {
         score_mini = 50;
