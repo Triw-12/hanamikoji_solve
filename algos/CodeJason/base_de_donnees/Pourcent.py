@@ -77,40 +77,45 @@ def nouv_proba (Proba:list, ind:int, R:int, Tc:int) :
 #         for j in range (4) :
 #             lst.append([])
 
-def modif_dico(dico, reuss) :
+def modif_dico(dico : dict, proba: list) :
+    reuss = 0
+    tot = 0
     lst_combi = list(dico.items())
     for i in range (len (lst_combi)) :
         lst_combi[i] = list(lst_combi[i])
     for i in range (len(lst_combi)) :
-        nouv_proba(lst_combi,i,reuss.get(lst_combi[i][0])[0],reuss.get(lst_combi[i][0])[1])
+        nouv_proba(lst_combi,i,proba.get(lst_combi[i][0])[0],proba.get(lst_combi[i][0])[1])
+        reuss += proba.get(lst_combi[i][0])[0]
+        tot += proba.get(lst_combi[i][0])[1]
     dico.update(lst_combi)
+    return (reuss,tot)
     
 
 
-# def modif_lst(lst_dico,lst_df) :
-#     lst_reuss = []
-#     lst_proba = []
-#     reuss = 0
-#     tot = 0
+def modif_lst(lst_dico,lst_df) :
+    lst_reuss = []
+    lst_tot = []
+    reuss = 0
+    tot = 0
      
-#     if type(lst_proba[0] == dict) :
-        
+    if type(lst_dico) == dict :
+        reuss,tot = modif_dico(lst_dico,lst_df)
 
-#     else :
-#         n = len(lst_proba[0])
+    else :
+        n = len(lst_dico)
 
-#         for i in range (n):
-#             renv = modif_lst(lst_dico[0][i],lst_df[i])
-#             lst_reuss.append(renv[0])
-#             lst_proba.append(lst_dico[0][i][1])
-#             reuss += renv[0]
-#             tot += renv[1]
+        for i in range (n):
+            renv = modif_lst(lst_dico[i][0],lst_df[i])
+            lst_reuss.append(renv[0])
+            lst_tot.append(renv[1])
+            reuss += renv[0]
+            tot += renv[1]
 
-#         for i in range (n):
-#             nouv_proba(lst_proba,i,lst_reuss[i],tot)
+        for i in range (n):
+            nouv_proba(lst_dico,i,lst_reuss[i],lst_tot[i])
     
     
-#     return reuss,tot
+    return reuss,tot
 
 
 # def modifie_proba (df,tab) :
@@ -123,8 +128,4 @@ def modif_dico(dico, reuss) :
 #             diff_t = 0
 #             for 
 
-dico = {0 : 200, 1 : 200, 2 : 200, 3 : 200, 4 : 200}
-dico_m = { 0: (10,50), 1: (5,20), 2: (30,100), 3: (40,150), 4: (1,2)}
 
-modif_dico(dico,dico_m)
-print(dico)
