@@ -37,7 +37,14 @@ bool verif_score_final(int *valide_moi, int *valide_adv)
 
 D_INT score(int *valide_moi, int *valide_adv, int *avantage)
 {
-    assert(verif_score_final(valide_moi, valide_adv));
+    bool assertion = verif_score_final(valide_moi, valide_adv);
+    if (!assertion)
+    {
+        printf("Moi %d %d %d %d %d %d %d\n", valide_moi[0], valide_moi[1], valide_moi[2], valide_moi[3], valide_moi[4], valide_moi[5], valide_moi[6]);
+        printf("Adv %d %d %d %d %d %d %d\n", valide_adv[0], valide_adv[1], valide_adv[2], valide_adv[3], valide_adv[4], valide_adv[5], valide_adv[6]);
+        fflush(stdout);
+        assert(false);
+    }
     D_INT res = {0, 0};
     for (int i = 0; i < 7; i++)
     {
@@ -90,4 +97,39 @@ void ajout(D_FLOAT *simu, int sco)
 float total_simu(D_FLOAT *simu)
 {
     return simu->som / simu->pond;
+}
+
+int main()
+{
+    int *cm = malloc(7 * sizeof(int));
+    int *ca = malloc(7 * sizeof(int));
+    int *av = malloc(7 * sizeof(int));
+    cm[0] = 2;
+    cm[1] = 2;
+    cm[2] = 2;
+    cm[3] = 2;
+    cm[4] = 0;
+    cm[5] = 0;
+    cm[6] = 0;
+    ca[0] = 0;
+    ca[1] = 0;
+    ca[2] = 0;
+    ca[3] = 1;
+    ca[4] = 1;
+    ca[5] = 3;
+    ca[6] = 3;
+    av[0] = 0;
+    av[1] = 0;
+    av[2] = 0;
+    av[3] = 0;
+    av[4] = 0;
+    av[5] = 0;
+    av[6] = 0;
+    printf("%d\n", diff_score(cm, ca, av));
+    D_FLOAT *r = init_d_float();
+    ajout(r, diff_score(cm, ca, av));
+    printf("%f\n", total_simu(r));
+    free(ca);
+    free(cm);
+    free(av);
 }
