@@ -90,7 +90,6 @@ void choix_cartes(marq *m)
         if (dernier_non_vide < m->k && non_plein >= 7)
         {
             free(m->pointeurs);
-            printf("FIN\n");
             m->pointeurs = NULL;
         }
     }
