@@ -13,3 +13,5 @@ print((1,0)[1])
 print(d)
 modif(d)
 print(d)
+
+print(type([3,2]))
