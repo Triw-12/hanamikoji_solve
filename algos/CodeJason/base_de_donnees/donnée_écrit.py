@@ -53,7 +53,7 @@ for cri in critère :
 
             for i in range (7) :
                 for j in range (i+1, 7) :
-                    fichier.write ( str(tour+1) +","+ str(manche+1)+ ",4,2,("+str(i)+"; "+str(i)+"; "+str(j)+"; "+str(j)+"),0,0\n")
+                    fichier.write ( str(tour+1) +","+ str(manche+1)+ ",4,3,("+str(i)+"; "+str(i)+"; "+str(j)+"; "+str(j)+"),0,0\n")
             
             for i in range (7) :
                 for j in range (7) :
