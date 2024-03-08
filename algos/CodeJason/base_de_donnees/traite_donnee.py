@@ -1,6 +1,31 @@
 from random import *
 from math import *
 
+
+def tab_reussite (df) :
+    # Renvoie un tableau dont les cases (final) comporte les données des réussites et des totaux conservé dans df
+    tab = []
+    crit = ["manche","tour","nmb_carte","class_par_carte_diff"]
+    for i in range (3) :
+        tab.append([])
+        for j in range (4) :
+            tab.append([])
+
+            for a in range (4) :
+                tab.append([])
+
+                for cd in range (0,a+1) :
+                    tab.append({})
+
+                    
+
+            
+
+
+    return tab
+
+
+
 def nouv_proba (Proba:list, ind:int, R:int, Tc:int) :
     """ Hyppothese : la somme des proba vaut 1000, aucune proba ne dépasse 1000 ou passe en dessous de 0, 0<R<Tc
      Modifie les valeurs de proba en considérant comme proba principal celle d'indice ind avec comme paramètre R réussite et Tc coup totaux"""
@@ -47,16 +72,8 @@ def nouv_proba (Proba:list, ind:int, R:int, Tc:int) :
 
 
 
-# def tab_reussite (df) :
-#     # Renvoie un tableau dont les cases (final) comporte les données des réussites et des totaux conservé dans df
-#     lst = []
-
-#     for i in range (3) :
-#         lst.append([])
-#         for j in range (4) :
-#             lst.append([])
-
 def modif_dico(dico : dict, proba: list) :
+    """Modifie le contenue de dico en fonction des donnée de proba"""
     reuss = 0
     tot = 0
     lst_combi = list(dico.items())
@@ -72,6 +89,7 @@ def modif_dico(dico : dict, proba: list) :
 
 
 def modif_lst(lst_dico,lst_df) :
+    """Modifie le contenue des dictionnaires contenues dans lst_dico en fonction de lst_df"""
     lst_reuss = []
     lst_tot = []
     reuss = 0
