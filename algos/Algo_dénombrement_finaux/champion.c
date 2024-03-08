@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "calcul_score.h"
-#include <time.h>
+#include <sys/time.h>
 
 typedef struct etat
 {
@@ -46,6 +46,15 @@ joueur adv;
 
 int valeur_couleur[7] = {2, 2, 2, 3, 3, 4, 5};
 int permu_trois[3][2] = {{1, 2}, {0, 2}, {0, 1}};
+
+long t1;
+long currenttime()
+{
+    struct timeval tp;
+
+    gettimeofday(&tp, NULL);
+    return tp.tv_sec * 1000 + tp.tv_usec / 1000;
+}
 
 void debug_cartes(int nb, int *ens_cartes, char *nom)
 {
@@ -328,14 +337,14 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
         cartes_adv[i] = etat->valide_adv[i] + cartes[i] + restantes[i];
         cartes_moi[i] = etat->valide_moi[i];
     }
-    printf("mon cote : %d adv : %d\n", nb_mon_cote, nb_cote_adv);
-    debug_cartes(7, total, "Total");
-    debug_cartes(7, cartes_adv, "Adv");
-    debug_cartes(7, cartes_moi, "Moi");
+    //printf("mon cote : %d adv : %d\n", nb_mon_cote, nb_cote_adv);
+    //debug_cartes(7, total, "Total");
+    //debug_cartes(7, cartes_adv, "Adv");
+    //debug_cartes(7, cartes_moi, "Moi");
     marq *mon_cote = init_marqueur(nb_mon_cote, nb_total, total);
     marq *defausse;
     int debug = 0;
-    while (mon_cote != NULL)
+    while (mon_cote->pointeurs != NULL)
     {
         if (verification(nb_cartes, cartes, nb_restantes, restantes, nb_mon_cote, mon_cote->pointeurs))
         {
@@ -353,15 +362,12 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
             {
                 defausse = init_marqueur(5, nb_total - mon_cote->k, total_s_moi);
             }
-
-            while (defausse != NULL)
+            while (defausse->pointeurs != NULL)
             {
                 for (int i = 0; i < defausse->k; i++)
                 {
                     cartes_adv[defausse->pointeurs[i]] -= 1;
                 }
-                printf("Ajout : %d\n", debug++);
-                fflush(stdout);
                 ajout(res, diff_score(cartes_moi, cartes_adv, g.etat->avantage));
                 for (int i = 0; i < defausse->k; i++)
                 {
@@ -369,7 +375,6 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
                 }
                 choix_cartes(defausse);
             }
-
             for (int i = 0; i < mon_cote->k; i++)
             {
                 total_s_moi[mon_cote->pointeurs[i]] += 1;
@@ -385,7 +390,7 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
 // Fonction appelée au début du jeu
 void init_jeu(void)
 {
-    int t1 = time(NULL);
+    t1 = currenttime();
     printf("Debut match\n");
     fflush(stdout);
     g.cartes = malloc(7 * sizeof(int));
@@ -404,7 +409,7 @@ void init_jeu(void)
     {
         adv = 0;
     }
-    printf("Fin de l'initialisation du tour : %ld\n\n", time(NULL) - t1);
+    printf("Fin de l'initialisation du tour : %ld\n\n", currenttime() - t1);
     fflush(stdout);
 }
 
@@ -413,7 +418,7 @@ void jouer_tour(void)
 {
     printf("Debut tour\n");
     fflush(stdout);
-    float t1 = time(NULL);
+    t1 = currenttime();
     update();
     printf("Update termine\n");
     fflush(stdout);
@@ -439,19 +444,19 @@ void jouer_tour(void)
         etat_simu->valide_adv[c] = g.etat->valide_adv[c];
         etat_simu->valide_moi[c] = g.etat->valide_moi[c];
     }
-    printf("Fin de copie de l'etat du jeu : %ld\n", time(NULL) - t1);
+    printf("Fin de copie de l'etat du jeu : %ld\n", currenttime() - t1);
     fflush(stdout);
     ///// VALIDER UNE CARTE
     if (g.act_poss[0])
     {
         int cpt_tour = 0;
         tour_simu = init_marqueur(1, g.en_main, g.cartes);
-        while (tour_simu != NULL)
+        while (tour_simu->pointeurs != NULL)
         {
-            if (cpt_tour % 1 == 0)
+            if (cpt_tour % 1000 == 0)
             {
                 printf("%d\n", cpt_tour);
-                printf("Le pointeur : %d, le temps : %ld\n", tour_simu->pointeurs[0], time(NULL) - t1);
+                printf("Le pointeur : %d, le temps : %ld\n", tour_simu->pointeurs[0], currenttime() - t1);
                 fflush(stdout);
             }
 
@@ -471,12 +476,14 @@ void jouer_tour(void)
         }
         free(tour_simu);
     }
+    printf("Fin simu valider\n");
+    fflush(stdout);
     if (g.act_poss[1])
     {
         // printf("Les pointeurs : %d %d, le tempps : %f\n", tour_simu->pointeurs[0],tour_simu->pointeurs[1], time(NULL)- t1);
         // fflush(stdout);
         tour_simu = init_marqueur(2, g.en_main, g.cartes);
-        while (tour_simu != NULL)
+        while (tour_simu->pointeurs != NULL)
         {
             cartes_simu[tour_simu->pointeurs[0]] -= 1;
             cartes_simu[tour_simu->pointeurs[1]] -= 1;
@@ -506,7 +513,7 @@ void jouer_tour(void)
         score_mini = 50;
         coup_mini.action = 3;
         tour_simu = init_marqueur(3, g.en_main, g.cartes);
-        while (tour_simu != NULL)
+        while (tour_simu->pointeurs != NULL)
         {
             cartes_simu[tour_simu->pointeurs[0]] -= 1;
             cartes_simu[tour_simu->pointeurs[1]] -= 1;
@@ -553,7 +560,7 @@ void jouer_tour(void)
         int *ordre = malloc(4 * sizeof(int));
         tour_simu = init_marqueur(4, g.en_main, g.cartes);
         aucune_carte(cartes_choisis);
-        while (tour_simu != NULL)
+        while (tour_simu->pointeurs != NULL)
         {
             cartes_simu[tour_simu->pointeurs[0]] -= 1;
             cartes_simu[tour_simu->pointeurs[1]] -= 1;
@@ -564,7 +571,7 @@ void jouer_tour(void)
             cartes_choisis[tour_simu->pointeurs[2]] += 1;
             cartes_choisis[tour_simu->pointeurs[3]] += 1;
             marq *prem_paquet = init_marqueur(2, 4, cartes_choisis);
-            while (prem_paquet != NULL)
+            while (prem_paquet->pointeurs != NULL)
             {
                 cpt = 0;
                 cpt_adv = 2;
@@ -662,7 +669,7 @@ void jouer_tour(void)
     {
         printf("ERREUR ! AUCUNE ACTION JOUEE :\n");
     }
-    printf("SCORE : %f\n TEMPS : %f s\n", score_maxi, time(NULL) - t1);
+    printf("SCORE : %f\n TEMPS : %f s\n", score_maxi, currenttime() - t1);
 }
 
 // Fonction appelée lors du choix entre les trois cartes lors de l'action de

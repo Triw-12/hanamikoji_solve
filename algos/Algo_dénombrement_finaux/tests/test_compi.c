@@ -59,6 +59,7 @@ void choix_cartes(marq *m)
     {
         free(m->pointeurs);
         m->pointeurs = NULL;
+        printf("FINNNN\n");
     }
     else
     {
@@ -91,6 +92,7 @@ void choix_cartes(marq *m)
         {
             free(m->pointeurs);
             m->pointeurs = NULL;
+            printf("FINNNN\n");
         }
     }
 }
@@ -98,14 +100,14 @@ void choix_cartes(marq *m)
 int main()
 {
     int *cartes = malloc(7 * sizeof(int));
-    cartes[0] = 3;
-    cartes[1] = 1;
+    cartes[0] = 0;
+    cartes[1] = 0;
     cartes[2] = 0;
-    cartes[3] = 0;
-    cartes[4] = 0;
-    cartes[5] = 2;
-    cartes[6] = 1;
-    marq *m = init_marqueur(4, 7, cartes);
+    cartes[3] = 1;
+    cartes[4] = 3;
+    cartes[5] = 4;
+    cartes[6] = 5;
+    marq *m = init_marqueur(5, 7, cartes);
     while (m->pointeurs != NULL)
     {
         for (int p = 0; p < m->k; p++)
@@ -115,5 +117,6 @@ int main()
         printf("\n");
         choix_cartes(m);
     }
+    printf("%d %d\n", m->pointeurs, m->pointeurs == NULL);
     return 0;
 }
