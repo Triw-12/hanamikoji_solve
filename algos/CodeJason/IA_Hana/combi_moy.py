@@ -42,7 +42,7 @@ def tri_occ (lst):
     for sl in sous_lst :
         lst_final=lst_final+sl
 
-    lst=lst_final
+    return lst_final
 
 
 
@@ -269,14 +269,15 @@ def nmb_moy(main, deck, action) :
 # main2 = [0,0,0,2,5,6,6,0,6,6]
 # print(tri_occ(main))
 # print(sous_manche(main,[False,False,False,True]))
-# print(tri_occ(main2))
+# main2 = tri_occ(main2)
+# print(main2)
 # print(sous_manche(main2,[False,False,False,True]))
 
-sm = sous_manche ([1,2,3,4,5,6,7],[True,False,False,False])
+# sm = sous_manche ([1,2,3,4,5,6,7],[True,False,False,False])
 
-for ssm in sm :
-    for m in ssm :
-        print("G ou P, 1, 1, ",m)
+# for ssm in sm :
+#     for m in ssm :
+#         print("G ou P, 1, 1, ",m)
 
 
 #print(nmb_combi_tour([5,5,5,4,4,2],[True,True,True,True]))

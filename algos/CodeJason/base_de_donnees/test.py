@@ -1,17 +1,13 @@
-def modif(d) :
-    lst_d = list(d.items())
-    for i in range (4) :
-        lst_d[i] = (i,i)
-    print(lst_d)
-    d.update(lst_d)
-    
-    
+import pandas as pd
 
-d = {0 : 3, 1 : 4, 2 : 10, 3 : 0}
-f =(1,0)
-print((1,0)[1])
-print(d)
-modif(d)
-print(d)
 
-print(type([3,2]))
+
+df = pd.DataFrame([[0, 2, 3], [0, 4, 1], [10, 20, 30]],index=[4, 5, 6], columns=['A', 'B', 'C'])
+
+dfbis = df[df['A']==0]
+
+for e in dfbis['B'] :
+    print(e)
+
+for e in dfbis['C'] :
+    print(e)

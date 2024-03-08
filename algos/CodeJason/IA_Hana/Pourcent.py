@@ -3,6 +3,8 @@ from math import *
 
 from combi_moy import *
 
+
+
 def choix_aleatoire (lst_pourc) :
     """ Renvois aléatoire un indice de lst_pourc, le nombre associé à l'indice est relative à la chance d'obtenir l'indice """
     pourc_tot = 0

@@ -53,19 +53,23 @@ for cri in critère :
 
             for i in range (7) :
                 for j in range (i+1, 7) :
-                    fichier.write ( str(tour+1) +","+ str(manche+1)+ ",4,2,("+str(i)+"; "+str(i)+"; "+str(j)+"; "+str(j)+"),0,0\n")
+                    fichier.write ( str(tour+1) +","+ str(manche+1)+ ",4,3,("+str(i)+"; "+str(i)+"; "+str(j)+"; "+str(j)+"),0,0\n")
+                    fichier.write ( str(tour+1) +","+ str(manche+1)+ ",4,3,("+str(i)+"; "+str(j)+"; "+str(i)+"; "+str(j)+"),0,0\n")
             
             for i in range (7) :
                 for j in range (7) :
                     for t in range (j+1,7) :
                         if i!=j and t!=i :
                             fichier.write ( str(tour+1) +","+ str(manche+1)+ ",4,3,("+str(i)+"; "+str(i)+"; "+str(j)+"; "+str(t)+"),0,0\n")
+                            fichier.write ( str(tour+1) +","+ str(manche+1)+ ",4,3,("+str(i)+"; "+str(j)+"; "+str(i)+"; "+str(t)+"),0,0\n")
 
             for i in range (7) :
                 for j in range (i+1, 7) :
                     for t in range (j+1, 7) :
                         for c in range (t+1, 7) :
-                            fichier.write ( str(tour+1) +","+ str(manche+1)+ ",4,4,("+str(i)+"; "+str(j)+"; "+str(t)+"; "+str(c)+"),0,0\n")    
+                            fichier.write ( str(tour+1) +","+ str(manche+1)+ ",4,4,("+str(i)+"; "+str(j)+"; "+str(t)+"; "+str(c)+"),0,0\n")
+                            fichier.write ( str(tour+1) +","+ str(manche+1)+ ",4,4,("+str(i)+"; "+str(t)+"; "+str(j)+"; "+str(c)+"),0,0\n")
+                            fichier.write ( str(tour+1) +","+ str(manche+1)+ ",4,4,("+str(i)+"; "+str(c)+"; "+str(j)+"; "+str(c)+"),0,0\n")    
 
 
 

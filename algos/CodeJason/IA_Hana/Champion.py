@@ -1,6 +1,8 @@
 from api import *
 from random import *
 
+from Pourcent import *
+
 MOI = 0
 
 # Fonction appelée au début du jeu
@@ -8,21 +10,27 @@ def init_jeu():
     global MOI
     MOI=id_joueur()
     print("debut de la partie")
+    pourcentage = 
 
 
 # Fonction appelée au début du tour
 def jouer_tour():
     print("debut du tour")
     global MOI
+
+    m = manche()
+    t = tour()
     n=nb_cartes(MOI)
+
     main=cartes_en_main()
+    main = tri_occ(main)
     non_valid=True
 
-    while non_valid :   #Action choisit aléatoirement
-        action_choisie=randint(0,3)
-        non_valid=est_jouee_action(MOI,action_choisie)
+    action = [False,False,False,False]
+    for i in range (4):
+        action[i] = est_jouee_action(MOI,action.i)
     
-    print("l'action ",action_choisie," a ete selectionne")
+    
 
     carte_s = []
     for i in range (action_choisie+1) :
