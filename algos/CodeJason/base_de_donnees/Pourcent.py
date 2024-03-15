@@ -123,25 +123,7 @@ def choix_act (Proba: list, main : list, action : list, t : int, m : int) :
 
     return coup_j
 
-        
-       
-        
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-
-
-
+def choix3 (Proba, coup, t, m) :
+    """Renvois le numéro de la carte sélectionné aléatoirement en fonction des données de Proba"""

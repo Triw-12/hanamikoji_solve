@@ -1,74 +1,140 @@
 from random import *
 from math import *
+import pandas as pd
 
-
-def tab_reussite (df) :
+def tab_reussite (ind_cri) :
     # Renvoie un tableau dont les cases (final) comporte les données des réussites et des totaux conservé dans df
+    critere = ["Manche_Couleurs","Manche_Points","Partie","Tour_Couleurs","Tour_Points"]
+    critere_red = ["M_C","M_P","P","T_C","T_P"]
     tab = []
+    dft = pd.read_csv(critere[ind_cri]+"//donnee"+critere_red[ind_cri]+".csv")
+    dfc3 = pd.read_csv(critere[ind_cri]+"//donneechoix3"+critere_red[ind_cri]+".csv")
+    dfc4 = pd.read_csv(critere[ind_cri]+"//donneechoix4"+critere_red[ind_cri]+".csv")
     crit = ["manche","tour","nmb_carte","class_par_carte_diff"]
-    for i in range (3) :
+
+    for i in range (3) :    #Par rapport au tour
+        dft2 = dft[dft[crit[0]]==i+1]
+        dfc3_2 = dfc3[dfc3[crit[0]==i+1]]
+        dfc4_2 = dfc4[dfc4[crit[0]==i+1]]
         tab.append([])
-        for j in range (4) :
-            tab.append([])
 
-            for a in range (4) :
-                tab.append([])
+        for j in range (4) :    #Par rapport au manche
+            dft3 = dft2[dft2[crit[1]]==j+1]
+            dfc3_3 = dfc3_2[dfc3_2[crit[0]==i+1]]
+            dfc4_3 = dfc4_2[dfc4_2[crit[0]==i+1]]
+            tab[i].append([])
 
-                for cd in range (0,a+1) :
-                    tab.append({})
+            for a in range (4) :    #Par rapport au nombre de carte utilisé
+                dft4 = dft3[dft3[crit[2]]==a+1]
+                tab[i][j].append([])
 
-                    
+                for cd in range (a+1) : #Par rapport au nombre de carte presque différente utilisé
+                    dft5 = dft4[dft4[crit[3]]==cd+1]
+                    tab[i][j][a].append({})
 
+                    for e in dft5.values :  #Chaque coup
+                        tab[i][j][a][cd][e[4]] = (e[5],e[6])
             
+            tab[i][j].append({})
+            for e in dfc3_3.values :
+                tab[i][j][4][e[2]] = (e[3],e[4],e[5],e[6],e[7],e[8])
 
+            tab[i][j].append({})
+            for e in dfc4_3.values :
+                tab[i][j][5][e[2]] = (e[3],e[4],e[5],e[6])
+        
 
     return tab
 
 
 
+def init_proba () :
+    """Renvois un tableau de tout les coups avec une probabilité égal pour chaque coup"""
+    tab = []
+    dft = pd.read_csv("Partie//donneeP.csv")
+    crit = ["manche","tour","nmb_carte","class_par_carte_diff"]
+
+    for i in range (3) :    #Par rapport au tour
+        dft2 = dft[dft[crit[0]]==i+1]
+        tab.append([])
+
+        for j in range (4) :    #Par rapport au manche
+            dft3 = dft2[dft2[crit[1]]==j+1]
+            tab[i].append([])
+
+            for a in range (4) :    #Par rapport au nombre de carte utilisé
+                rest1 = 1000-(a+1)*(1000//(a+1))
+                dft4 = dft3[dft3[crit[2]]==a+1]
+                tab[i][j].append([[],250])
+
+                for cd in range (a+1) : #Par rapport au nombre de carte presque différente utilisé
+                    
+                    dft5 = dft4[dft4[crit[3]]==cd+1]
+
+                    if rest1 > 0 :
+                        tab[i][j][a][0].append([{},1+(1000//(a+1))])
+                        rest1 = rest1 -1
+                    else :
+                        tab[i][j][a][0].append([{},(1000//(a+1))])
+
+                    n = len(dft5)
+                    rest2 = 1000-n*(1000//n)
+
+                    for e in dft5.values :  #Chaque coup                        
+                        if rest2 >0 :
+                            tab[i][j][a][0][cd][0][e[4]] = (1000//n) +1
+                            rest2 = rest2 -1
+                        else :
+                            tab[i][j][a][0][cd][0][e[4]] = (1000//n) 
+    
+    return tab
+
+
+
 def nouv_proba (Proba:list, ind:int, R:int, Tc:int) :
-    """ Hyppothese : la somme des proba vaut 1000, aucune proba ne dépasse 1000 ou passe en dessous de 0, 0<R<Tc
-     Modifie les valeurs de proba en considérant comme proba principal celle d'indice ind avec comme paramètre R réussite et Tc coup totaux"""
+    """ Hyppothese : la somme des proba vaut 1000, aucune proba ne dépasse 1000 ou passe en dessous de 0, 0<R<Tc, si Tc = 0, la fonction ne fait rien
+    Modifie les valeurs de proba en considérant comme proba principal celle d'indice ind avec comme paramètre R réussite et Tc coup totaux"""
 
-    coef = (R+Tc)/Tc - 0.5
-    n = len(Proba)
+    if Tc != 0 :
+        coef = (R+Tc)/Tc - 0.5
+        n = len(Proba)
 
-    erreur = 1000   #ecard du a l'approximation des pourcentages
+        erreur = 1000   #ecard du a l'approximation des pourcentages
 
-    somme = 1000 -Proba[ind][1]  #Somme des pourmilles de tout les termes différentes de ind
+        somme = 1000 -Proba[ind][1]  #Somme des pourmilles de tout les termes différentes de ind
 
-    if coef < 1 :
-        nouv_Proba= Proba[ind][1] * coef
-    
-        ecar = Proba[ind][1] - nouv_Proba
+        if coef < 1 :
+            nouv_Proba= Proba[ind][1] * coef
+        
+            ecar = Proba[ind][1] - nouv_Proba
 
-        for i in range (n) :
-            if i!= ind :
-                Proba[i][1] = ceil(Proba[i][1] + ecar*(Proba[i][1]/somme))
-                erreur = erreur - Proba[i][1]
-    
-    else :
-        nouv_Proba = 1000 - (1000 - Proba[ind][1])/coef
-
-        ecar = Proba[ind][1] - nouv_Proba
-
-        for i in range (n) :
-            if i!= ind :
-                Proba[i][1] = ceil(Proba[i][1] + ecar*(Proba[i][1]/somme))
-                erreur = erreur - Proba[i][1]
-
-    Proba[ind][1] = ceil(nouv_Proba)
-    erreur = erreur - Proba[ind][1]
-
-    i =0
-    while erreur != 0:
-        if erreur < 0 :
-            Proba[i][1]= Proba[i][1] - 1
-            erreur+=1
+            for i in range (n) :
+                if i!= ind :
+                    Proba[i][1] = ceil(Proba[i][1] + ecar*(Proba[i][1]/somme))
+                    erreur = erreur - Proba[i][1]
+        
         else :
-            Proba[i][1]= Proba[i][1] + 1
-            erreur-=1
-        i+=1
+            nouv_Proba = 1000 - (1000 - Proba[ind][1])/coef
+
+            ecar = Proba[ind][1] - nouv_Proba
+
+            for i in range (n) :
+                if i!= ind :
+                    Proba[i][1] = ceil(Proba[i][1] + ecar*(Proba[i][1]/somme))
+                    erreur = erreur - Proba[i][1]
+
+        Proba[ind][1] = ceil(nouv_Proba)
+        erreur = erreur - Proba[ind][1]
+
+        i =0
+        while erreur != 0:
+            if erreur < 0 :
+                Proba[i][1]= Proba[i][1] - 1
+                erreur+=1
+            else :
+                Proba[i][1]= Proba[i][1] + 1
+                erreur-=1
+            i+=1
 
 
 
@@ -112,3 +178,20 @@ def modif_lst(lst_dico,lst_df) :
             nouv_proba(lst_dico,i,lst_reuss[i],lst_tot[i])
     
     return reuss,tot
+ 
+
+
+def modifie_tab (tab, ind_cri) :
+    """Hyppothèse: tab est de dimension 3 4"""
+    """modifie les probabilité contenue dans tab en fonction des données de df"""
+
+    tab_reuss = tab_reussite(ind_cri)
+
+    for i in range (3) :
+        for j in range (4) :
+            modif_lst(tab[i][j],tab_reuss)
+
+
+
+
+

@@ -4,22 +4,25 @@ from random import *
 from Pourcent import *
 
 MOI = 0
+tab_proba = []#importé
 
 # Fonction appelée au début du jeu
 def init_jeu():
     global MOI
+    global tab_proba
     MOI=id_joueur()
     print("debut de la partie")
-    pourcentage = 
+
 
 
 # Fonction appelée au début du tour
 def jouer_tour():
     print("debut du tour")
     global MOI
+    global tab_proba
 
     m = manche()
-    t = tour()
+    t = tour()//2
     n=nb_cartes(MOI)
 
     main=cartes_en_main()
@@ -30,33 +33,30 @@ def jouer_tour():
     for i in range (4):
         action[i] = est_jouee_action(MOI,action.i)
     
+    coup_c = choix_act(tab_proba,main,action,t,m)
+
+    if coup_c[1]==0 :
+        action_valider(coup_c[0][1])
+
+    elif coup_c[1]==1 :
+        action_defausser(coup_c[0][1], coup_c[0][3])
     
+    elif coup_c[1] == 2 :
+        action_choix_trois(coup_c[0][1], coup_c[0][3], coup_c[0][5])
 
-    carte_s = []
-    for i in range (action_choisie+1) :
-        c = randint(0,n-i-1)
-        carte_s.append(main.pop(c))
+    elif coup_c[1] == 3 :
+        action_choix_paquets(coup_c[0][1], coup_c[0][3], coup_c[0][5], coup_c[0][7])
 
-    print ("La (les) carte(s) jouee(s) sont : ", carte_s)
 
-    if action_choisie==0 :
-        action_valider(carte_s[0])
-
-    elif action_choisie==1 :
-        action_defausser(carte_s[0], carte_s[1])
-    
-    elif action_choisie == 2 :
-        action_choix_trois(carte_s[0], carte_s[1], carte_s[2])
-
-    elif action_choisie == 3 :
-        action_choix_paquets(carte_s[0], carte_s[1], carte_s[2], carte_s[3])
 
 
 # Fonction appelée lors du choix entre les trois cartes lors de l'action de
 # l'adversaire (cf tour_precedent)
 def repondre_action_choix_trois():
-    choix=randint(0,2)
-    print("la carte ",choix," a ete selectionne")
+    act = tour_precedent()
+    
+
+
     repondre_choix_trois(choix)
 
 

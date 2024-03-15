@@ -45,7 +45,7 @@ def choix_act_list (Proba: list, possible: list) :
         
 
 def choix_act (Proba: list, main : list, action : list, t : int, m : int) :
-    """Lors de la manche m et du tour t, renvois aléatoirement un coup réalisable en fonction de main et action"""
+    """Lors de la manche m et du tour t, renvois aléatoirement un coup et son action associé réalisable en fonction de main et action"""
     tri_occ(main)
     nmb_combi = combi_to_nmb(main)
     n = len(main)
@@ -123,11 +123,11 @@ def choix_act (Proba: list, main : list, action : list, t : int, m : int) :
         
     coup_j = choix_act_dic(tab_eff[action_j][dif_j],coup_possible)
 
-    return coup_j
+    return (coup_j,action_j)
 
         
-       
-        
+ 
+
 
 
 
