@@ -86,6 +86,8 @@ def init_proba () :
                             rest2 = rest2 -1
                         else :
                             tab[i][j][a][0][cd][0][e[4]] = (1000//n) 
+
+            #Choix 3
     
     return tab
 
@@ -138,6 +140,52 @@ def nouv_proba (Proba:list, ind:int, R:int, Tc:int) :
 
 
 
+def nouv_proba3 (Proba, lst_reuss) :
+    """Modifie les données de proba conformément à lst_reuss"""
+    for i in range (3) :
+        R = lst_reuss[2*i]
+        Tc = lst_reuss[2*i+1]
+        if Tc != 0 :
+            coef = (R+Tc)/Tc - 0.5
+
+            erreur = 100   #ecard du a l'approximation des pourcentages
+
+            somme = 100 -Proba[i]  #Somme des pourmilles de tout les termes différentes de ind
+
+            if coef < 1 :
+                nouv_Proba= Proba[i] * coef
+            
+                ecar = Proba[i] - nouv_Proba
+
+                for j in range (3) :
+                    if j!= i :
+                        Proba[j] = ceil(Proba[j] + ecar*(Proba[j]/somme))
+                        erreur = erreur - Proba[j]
+            
+            else :
+                nouv_Proba = 100 - (100 - Proba[i])/coef
+
+                ecar = Proba[i] - nouv_Proba
+
+                for j in range (3) :
+                    if i!= j :
+                        Proba[j] = ceil(Proba[j] + ecar*(Proba[j]/somme))
+                        erreur = erreur - Proba[j]
+            
+            Proba[i] = ceil(nouv_Proba)
+            erreur = erreur - Proba[i]
+
+            k =0
+            while erreur != 0:
+                if erreur < 0 :
+                    Proba[k]= Proba[k] - 1
+                    erreur+=1
+                else :
+                    Proba[k]= Proba[k] + 1
+                    erreur-=1
+                k= (k+1) %3
+
+
 def modif_dico(dico : dict, proba: list) :
     """Modifie le contenue de dico en fonction des donnée de proba"""
     reuss = 0
@@ -181,6 +229,15 @@ def modif_lst(lst_dico,lst_df) :
  
 
 
+def modif_choix3 (dico,dico_reuss) :
+    """Modifie les données de dico celon dico_reuss, dico représente des choix avec 3 cas"""
+    lst_coup = dico.keys()
+
+    for c in lst_coup :
+        nouv_proba3(dico[c],dico_reuss[c])
+
+
+
 def modifie_tab (tab, ind_cri) :
     """Hyppothèse: tab est de dimension 3 4"""
     """modifie les probabilité contenue dans tab en fonction des données de df"""
@@ -189,9 +246,14 @@ def modifie_tab (tab, ind_cri) :
 
     for i in range (3) :
         for j in range (4) :
-            modif_lst(tab[i][j],tab_reuss)
+            modif_lst(tab[i][j],tab_reuss[i][j])
+            # modif_choix3(tab[i][j][4],tab_reuss[i][j][4])
 
 
 
 
+dico = {(1,0,0) : [35,20,45], (1,1,0) : [80,10,10]}
+dico_reuss = {(1,0,0) : [0,0,20,45,45,100], (1,1,0) : [80,200,10,30,10,15]}
 
+modif_choix3(dico,dico_reuss)
+print(dico)
