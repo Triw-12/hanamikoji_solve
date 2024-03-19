@@ -1,6 +1,6 @@
-l = {3 : 1, 4 : 5, 2 : 3}
-j = {3 : 3, 4 : 8, 2 : 9}
-slt = l.keys()
+from random import *
+from math import *
 
-for e in slt :
-    print (j[e])
+from combi_moy import *
+
+print(randint(0,2))

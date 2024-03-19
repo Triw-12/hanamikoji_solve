@@ -126,4 +126,26 @@ def choix_act (Proba: list, main : list, action : list, t : int, m : int) :
 
 
 def choix3 (Proba, coup, t, m) :
-    """Renvois le numéro de la carte sélectionné aléatoirement en fonction des données de Proba"""
+    """Renvois le numéro de la carte sélectionnée aléatoirement en fonction des données de Proba"""
+    choix = randint(1,100)
+    coup_str = str(coup)
+    proba_coup = Proba[m][t][4][coup_str]
+
+    num = 0
+    while choix > 0 :
+        choix = choix - proba_coup[num]
+        num+=1
+    
+    return num-1
+
+
+def choix4 (Proba, coup, t, m) :
+    """Renvois le numéro du paquet de cartes sélectionné aléatoirement en fonction des données de Proba"""
+    choix = randint(1,100)
+    coup_str = str(coup)
+    proba_coup = Proba[m][t][5][coup_str]
+
+    if choix <= proba_coup[0] :
+        return 0
+    else :
+        return 1

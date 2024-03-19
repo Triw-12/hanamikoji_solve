@@ -52,6 +52,8 @@ def init_proba () :
     """Renvois un tableau de tout les coups avec une probabilité égal pour chaque coup"""
     tab = []
     dft = pd.read_csv("Partie//donneeP.csv")
+    dfc3 = pd.read_csv("Partie//donneechoix3P.csv")
+    dfc4 = pd.read_csv("Partie//donneechoix4P.csv")
     crit = ["manche","tour","nmb_carte","class_par_carte_diff"]
 
     for i in range (3) :    #Par rapport au tour
@@ -88,6 +90,19 @@ def init_proba () :
                             tab[i][j][a][0][cd][0][e[4]] = (1000//n) 
 
             #Choix 3
+            dfc3_1 = dfc3[dfc3["manche"] == 1]
+            dfc3_2 = dfc3_1[dfc3_1["tour"] == 1]
+            tab[i][j].append({})
+            for e in dfc3_2.values :
+                tab[i][j][4][e[2]] = [34,33,33] 
+            
+            
+            #Choix 4
+            dfc4_1 = dfc4[dfc4["manche"] == 1]
+            dfc4_2 = dfc4_1[dfc4["tour"] == 1]
+            tab[i][j].append({})
+            for e in dfc4_2 .values :
+                tab[i][j][5][e[2]] = [50,50]
     
     return tab
 
@@ -186,6 +201,51 @@ def nouv_proba3 (Proba, lst_reuss) :
                 k= (k+1) %3
 
 
+
+def nouv_Proba4 (Proba,lst_reuss) :
+    for i in range (2) :
+        j = (i+1) % 2
+        R = lst_reuss[2*i]
+        Tc = lst_reuss[2*i+1]
+        if Tc != 0 :
+            coef = (R+Tc)/Tc - 0.5
+
+            erreur = 100   #ecard du a l'approximation des pourcentages
+
+            somme = 100 -Proba[i]  #Somme des pourmilles de tout les termes différentes de ind
+
+            if coef < 1 :
+                nouv_Proba= Proba[i] * coef
+            
+                ecar = Proba[i] - nouv_Proba
+
+
+                Proba[j] = ceil(Proba[j] + ecar*(Proba[j]/somme))
+                erreur = erreur - Proba[j]
+            
+            else :
+                nouv_Proba = 100 - (100 - Proba[i])/coef
+
+                ecar = Proba[i] - nouv_Proba
+
+                Proba[j] = ceil(Proba[j] + ecar*(Proba[j]/somme))
+                erreur = erreur - Proba[j]
+            
+            Proba[i] = ceil(nouv_Proba)
+            erreur = erreur - Proba[i]
+
+            k =0
+            while erreur != 0:
+                if erreur < 0 :
+                    Proba[k]= Proba[k] - 1
+                    erreur+=1
+                else :
+                    Proba[k]= Proba[k] + 1
+                    erreur-=1
+                k= (k+1) %2
+
+
+
 def modif_dico(dico : dict, proba: list) :
     """Modifie le contenue de dico en fonction des donnée de proba"""
     reuss = 0
@@ -247,13 +307,7 @@ def modifie_tab (tab, ind_cri) :
     for i in range (3) :
         for j in range (4) :
             modif_lst(tab[i][j],tab_reuss[i][j])
-            # modif_choix3(tab[i][j][4],tab_reuss[i][j][4])
+            modif_choix3(tab[i][j][4],tab_reuss[i][j][4])
 
 
 
-
-dico = {(1,0,0) : [35,20,45], (1,1,0) : [80,10,10]}
-dico_reuss = {(1,0,0) : [0,0,20,45,45,100], (1,1,0) : [80,200,10,30,10,15]}
-
-modif_choix3(dico,dico_reuss)
-print(dico)
