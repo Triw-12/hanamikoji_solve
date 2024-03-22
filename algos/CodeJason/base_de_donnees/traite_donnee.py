@@ -310,4 +310,6 @@ def modifie_tab (tab, ind_cri) :
             modif_choix3(tab[i][j][4],tab_reuss[i][j][4])
 
 
-
+fichier = open("tab_pourc","w")
+fichier.write(str(init_proba()))
+fichier.close

@@ -1,6 +1,6 @@
-from random import *
-from math import *
 
-from combi_moy import *
 
-print(randint(0,2))
+fichier= open("tab_pourc","r")
+lst = fichier.read()
+print(lst)
+fichier.close

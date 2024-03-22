@@ -3,10 +3,9 @@ from math import *
 
 from combi_moy import *
 
-
-
 def choix_aleatoire (lst_pourc) :
     """ Renvois aléatoire un indice de lst_pourc, le nombre associé à l'indice est relative à la chance d'obtenir l'indice """
+    assert(lst_pourc != [])
     pourc_tot = 0
     echelle = []
     choix_f = -1
@@ -45,11 +44,11 @@ def choix_act_list (Proba: list, possible: list) :
         
 
 def choix_act (Proba: list, main : list, action : list, t : int, m : int) :
-    """Lors de la manche m et du tour t, renvois aléatoirement un coup et son action associé réalisable en fonction de main et action"""
+    """Lors de la manche m et du tour t, renvois aléatoirement un coup réalisable en fonction de main et action"""
     tri_occ(main)
     nmb_combi = combi_to_nmb(main)
     n = len(main)
-    tab_eff = Proba[t][m]
+    tab_eff = Proba[m][t]
 
     action_j = choix_act_list(tab_eff,action)
 
@@ -123,27 +122,31 @@ def choix_act (Proba: list, main : list, action : list, t : int, m : int) :
         
     coup_j = choix_act_dic(tab_eff[action_j][dif_j],coup_possible)
 
-    return (coup_j,action_j)
-
-        
- 
+    return coup_j
 
 
 
+def choix3 (Proba, coup, t, m) :
+    """Renvois le numéro de la carte sélectionnée aléatoirement en fonction des données de Proba"""
+    choix = randint(1,100)
+    coup_str = str(coup)
+    proba_coup = Proba[m][t][4][coup_str]
 
-
-
-
-
-
-
-
-
-
-
-
+    num = 0
+    while choix > 0 :
+        choix = choix - proba_coup[num]
+        num+=1
     
-    
+    return num-1
 
 
+def choix4 (Proba, coup, t, m) :
+    """Renvois le numéro du paquet de cartes sélectionné aléatoirement en fonction des données de Proba"""
+    choix = randint(1,100)
+    coup_str = str(coup)
+    proba_coup = Proba[m][t][5][coup_str]
 
+    if choix <= proba_coup[0] :
+        return 0
+    else :
+        return 1
