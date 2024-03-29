@@ -96,11 +96,14 @@ void ajout(D_FLOAT *simu, int sco)
 
 float total_simu(D_FLOAT *simu)
 {
-    return simu->som / simu->pond;
+    float res = simu->som / simu->pond;
+    free(simu);
+    return res;
 }
 
 int main()
 {
+    //            TESTS
     int *cm = malloc(7 * sizeof(int));
     int *ca = malloc(7 * sizeof(int));
     int *av = malloc(7 * sizeof(int));

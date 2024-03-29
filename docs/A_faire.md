@@ -3,10 +3,9 @@
 ## Tristan
 
 * Ajouter la vérification
-* Ajouter l'élagage alpha-beta
-* Ajouter les free
 * Ajouter les commentaires
 * Changer la méthode de comptage
+* Dire pourquoi on ne peut pas implémenter l'élagage alpha-beta
 
 ## Jason
 
