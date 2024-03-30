@@ -31,12 +31,15 @@ def choix_act_dic (Proba: dict, possible: list) :
     """Renvois aléatoire un élément de possible. La chance de chaque élément de possible est contenue dans Proba"""
     list_proba = []
     print(possible)
+    print(Proba)
 
     for coup in possible :
         coup_str = str(coup)
         coup_str = coup_str.replace(',',';')
         coup_str = coup_str.replace('[','(')
         coup_str = coup_str.replace(']',')')
+        print(coup_str)
+        print(Proba.get(coup_str))
         list_proba.append(Proba.get(coup_str))
 
     return possible[choix_aleatoire(list_proba)]
@@ -76,13 +79,13 @@ def choix_act (Proba: list, main : list, action : list, m : int, t : int) :
     #Choix du nombre de cartes
     nmb_c_dif_j = []
     for i in range (action_j+1) :
-        if nmb_combi[3-i]!=0 and nmb_combi[0]>=action_j-i :
+        if nmb_combi[3-i]!=0 and nmb_combi[3-i] > i :
             nmb_c_dif_j.append(i)
     
     dif_j = choix_act_list(tab_eff[action_j][0],nmb_c_dif_j)
 
     print(action_j,dif_j)
-    action_j = 3
+    print(nmb_combi)
 
     #Choix du coup
     coup_possible=[]
@@ -191,12 +194,12 @@ Proba : dict = {1 : 20, 2 : 10, 3 : 30, 4 : 5, 5 : 35}
 possible : list = [1, 3, 5]
 
 action = [True,True,True,True]
-main = (0,1,3,3,1,3)
+main = (0,1,3,3,1,3,4)
 
 # print(choix_act_dic(Proba,possible))
 # print(Proba)
 # print(possible)
 
-for i in range (10) :
-    print(choix_act(tab_proba,main,action,1,1))
+# for i in range (10) :
+#     print(choix_act(tab_proba,main,action,1,1))
 print(choix_act(tab_proba,main,action,1,1))
