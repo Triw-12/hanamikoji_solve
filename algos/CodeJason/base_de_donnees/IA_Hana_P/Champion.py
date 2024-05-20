@@ -26,7 +26,7 @@ def jouer_tour():
     t = tour()//2
     n=nb_cartes(MOI)
 
-    main=cartes_en_main()
+    main = cartes_en_main()
     main = tri_occ(main)
     non_valid=True
 
@@ -36,18 +36,19 @@ def jouer_tour():
             action.append(i)
     
     coup_c = choix_act(tab_proba,main,action,t,m)
+    print(coup_c)
 
     if coup_c[1]==0 :
-        action_valider(coup_c[0][1])
+        action_valider(coup_c[0][0])
 
     elif coup_c[1]==1 :
-        action_defausser(coup_c[0][1], coup_c[0][3])
+        action_defausser(coup_c[0][0], coup_c[0][1])
     
     elif coup_c[1] == 2 :
-        action_choix_trois(coup_c[0][1], coup_c[0][3], coup_c[0][5])
+        action_choix_trois(coup_c[0][0], coup_c[0][1], coup_c[0][2])
 
     elif coup_c[1] == 3 :
-        action_choix_paquets(coup_c[0][1], coup_c[0][3], coup_c[0][5], coup_c[0][7])
+        action_choix_paquets(coup_c[0][0], coup_c[0][1], coup_c[0][2], coup_c[0][3])
     
     print(coup_c[1]," ",m," ",t," ",coup_c[0])
 

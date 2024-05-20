@@ -99,7 +99,7 @@ def init_proba () :
             
             #Choix 4
             dfc4_1 = dfc4[dfc4["manche"] == 1]
-            dfc4_2 = dfc4_1[dfc4["tour"] == 1]
+            dfc4_2 = dfc4_1[dfc4_1["tour"] == 1]
             tab[i][j].append({})
             for e in dfc4_2 .values :
                 tab[i][j][5][e[2]] = [50,50]

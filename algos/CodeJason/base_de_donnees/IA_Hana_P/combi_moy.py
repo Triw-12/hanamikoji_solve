@@ -49,12 +49,13 @@ def tri_occ (lst):
 def combi_to_nmb (lst) :
     """Renvois le nombre de carte différentes, doublés, triplés et quadruplé"""
     
-    lst_bis=tri_occ(lst)
+    lst_bis = tri_occ(lst)
 
     lst_coef=[1,0,0,0]
     num_sl=0
 
     for i in range (1,len(lst)) :
+        
         if lst_bis[i]<=lst_bis[i-1]:
             num_sl+=1
         
@@ -262,15 +263,11 @@ def nmb_moy(main, deck, action) :
 
 
 
-
-
-
 # main=[0,0,1,3,3,5,6,6,6]
 # main2 = [0,0,0,2,5,6,6,0,6,6]
 # print(tri_occ(main))
 # print(sous_manche(main,[False,False,False,True]))
-# main2 = tri_occ(main2)
-# print(main2)
+# print(tri_occ(main2))
 # print(sous_manche(main2,[False,False,False,True]))
 
 # sm = sous_manche ([1,2,3,4,5,6,7],[True,False,False,False])
@@ -281,3 +278,5 @@ def nmb_moy(main, deck, action) :
 
 
 #print(nmb_combi_tour([5,5,5,4,4,2],[True,True,True,True]))
+
+#print(combi_to_nmb([0,0,1,4,4,5,2,2,2,2,4]))

@@ -27,19 +27,49 @@ def choix_aleatoire (lst_pourc) :
 
 
 
+def combi_possible(action_j : int, main_tri : list, nmb_combi : int) :
+    """Renvois une liste contenant le nombre de carte différente possible à joué"""
+
+    if action_j == 0 :
+        return [0]
+    
+    else :
+
+        lst_combi =[]
+
+        if nmb_combi[action_j] > 0 :
+            lst_combi.append(0)
+
+        if nmb_combi[0] > action_j :
+            lst_combi.append(action_j)
+        
+        if action_j == 1:
+            return lst_combi
+        
+        else :
+            if nmb_combi[action_j-1] > 0 and nmb_combi[0] > 0 :
+                lst_combi.append(1)
+        
+            if action_j == 2 :
+                return lst_combi
+
+            else :
+                if (nmb_combi[1] > 0 and nmb_combi[0] > 1) or (nmb_combi[1] > 1) :
+                    lst_combi.append(2)
+                return lst_combi
+
+
+
+
 def choix_act_dic (Proba: dict, possible: list) :
     """Renvois aléatoire un élément de possible. La chance de chaque élément de possible est contenue dans Proba"""
     list_proba = []
-    print(possible)
-    print(Proba)
 
     for coup in possible :
         coup_str = str(coup)
         coup_str = coup_str.replace(',',';')
         coup_str = coup_str.replace('[','(')
         coup_str = coup_str.replace(']',')')
-        print(coup_str)
-        print(Proba.get(coup_str))
         list_proba.append(Proba.get(coup_str))
 
     return possible[choix_aleatoire(list_proba)]
@@ -77,11 +107,10 @@ def choix_act (Proba: list, main : list, action : list, m : int, t : int) :
 
     action_j = 3
     #Choix du nombre de cartes
-    nmb_c_dif_j = []
-    for i in range (action_j+1) :
-        if nmb_combi[3-i]!=0 and nmb_combi[3-i] > i :
-            nmb_c_dif_j.append(i)
     
+    nmb_c_dif_j = combi_possible(action_j,main_tri,nmb_combi)
+    
+    print(nmb_c_dif_j)
     dif_j = choix_act_list(tab_eff[action_j][0],nmb_c_dif_j)
 
     print(action_j,dif_j)
@@ -95,7 +124,7 @@ def choix_act (Proba: list, main : list, action : list, m : int, t : int) :
             coup = []
             for k in range (action_j+1):
                 coup.append(main_tri[i])
-            coup_possible.append(coup)
+            coup_possible.append(tuple(coup))
 
     elif dif_j == 3 :   #4 cartes sont différentes
         for i in range (nmb_combi[0]) :
@@ -147,7 +176,6 @@ def choix_act (Proba: list, main : list, action : list, m : int, t : int) :
                     if main_tri[i] != main_tri[j] :
                         coup_possible.append((main_tri[i],main_tri[i],main_tri[i],main_tri[j]))
         
-
     coup_j = choix_act_dic(tab_eff[action_j][0][dif_j][0],coup_possible)
 
     return coup_j
@@ -189,17 +217,14 @@ def choix4 (Proba, coup, t, m) :
 
 ## Test
 
-tab_proba = tab()
-Proba : dict = {1 : 20, 2 : 10, 3 : 30, 4 : 5, 5 : 35}
-possible : list = [1, 3, 5]
+# tab_proba = tab()
+# Proba : dict = {1 : 20, 2 : 10, 3 : 30, 4 : 5, 5 : 35}
+# possible : list = [1, 3, 5]
 
-action = [True,True,True,True]
-main = (0,1,3,3,1,3,4)
+# action = [True,True,True,True]
+# main = (5,5,0,4,5,4,4)
 
-# print(choix_act_dic(Proba,possible))
-# print(Proba)
-# print(possible)
-
-# for i in range (10) :
+# for i in range (50) :
 #     print(choix_act(tab_proba,main,action,1,1))
-print(choix_act(tab_proba,main,action,1,1))
+#     print("\n")
+# print(choix_act(tab_proba,main,action,1,1))
