@@ -105,13 +105,11 @@ def choix_act (Proba: list, main : list, action : list, m : int, t : int) :
 
     action_j = choix_act_list(tab_eff,possible)
 
-    action_j = 3
     #Choix du nombre de cartes
     
     nmb_c_dif_j = combi_possible(action_j,main_tri,nmb_combi)
     
     dif_j = choix_act_list(tab_eff[action_j][0],nmb_c_dif_j)
-
 
     #Choix du coup
     coup_possible=[]
@@ -175,16 +173,19 @@ def choix_act (Proba: list, main : list, action : list, m : int, t : int) :
         
     coup_j = choix_act_dic(tab_eff[action_j][0][dif_j][0],coup_possible)
 
-    return [coup_j,action_j]
+    return (coup_j,action_j)
 
 
 
 def choix3 (Proba, coup, t, m) :
     """Renvois le numéro de la carte sélectionnée aléatoirement en fonction des données de Proba"""
+    print(coup)
     choix = randint(1,100)
     coup_str = str(coup)
 
     coup_str = coup_str.replace(",",";")
+    coup_str = coup_str.replace("[","(")
+    coup_str = coup_str.replace("]",")")
 
     proba_coup = Proba[m][t][4][coup_str]
 
@@ -202,8 +203,11 @@ def choix4 (Proba, coup, t, m) :
     coup_str = str(coup)
 
     coup_str = coup_str.replace(",",";")
+    coup_str = coup_str.replace("[","(")
+    coup_str = coup_str.replace("]",")")
 
     proba_coup = Proba[m][t][5][coup_str]
+    
 
     if choix <= proba_coup[0] :
         return 0
@@ -214,14 +218,9 @@ def choix4 (Proba, coup, t, m) :
 
 ## Test
 
-# tab_proba = tab()
+tab_proba = tab()
 # Proba : dict = {1 : 20, 2 : 10, 3 : 30, 4 : 5, 5 : 35}
 # possible : list = [1, 3, 5]
 
 # action = [True,True,True,True]
 # main = (5,5,0,4,5,4,4)
-
-# for i in range (50) :
-#     print(choix_act(tab_proba,main,action,1,1))
-#     print("\n")
-# print(choix_act(tab_proba,main,action,1,1))

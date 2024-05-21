@@ -184,6 +184,7 @@ def choix_act (Proba: list, main : list, action : list, m : int, t : int) :
 
 def choix3 (Proba, coup, t, m) :
     """Renvois le numéro de la carte sélectionnée aléatoirement en fonction des données de Proba"""
+    print(coup)
     choix = randint(1,100)
     coup_str = str(coup)
 
@@ -201,6 +202,7 @@ def choix3 (Proba, coup, t, m) :
 
 def choix4 (Proba, coup, t, m) :
     """Renvois le numéro du paquet de cartes sélectionné aléatoirement en fonction des données de Proba"""
+    print(coup)
     choix = randint(1,100)
     coup_str = str(coup)
 
@@ -225,6 +227,5 @@ def choix4 (Proba, coup, t, m) :
 # main = (5,5,0,4,5,4,4)
 
 # for i in range (50) :
-#     print(choix_act(tab_proba,main,action,1,1))
+#     print(choix3(tab_proba))
 #     print("\n")
-# print(choix_act(tab_proba,main,action,1,1))

@@ -1,5 +1,6 @@
 from api import *
 from random import *
+from time import time
 
 from Pourcent import *
 from tab_pourc import tab
@@ -21,19 +22,20 @@ def jouer_tour():
     print("debut du tour")
     global MOI
     global tab_proba
+    t1 = time()
 
     m = manche()
     t = tour()//2
-    n=nb_cartes(MOI)
 
     main = cartes_en_main()
     main = tri_occ(main)
-    non_valid=True
 
     action = []
     for i in range (4):
         if not(est_jouee_action(MOI,i)) :
-            action.append(i)
+            action.append(True)
+        else :
+            action.append(False)
     
     coup_c = choix_act(tab_proba,main,action,t,m)
     print(coup_c)
@@ -51,6 +53,7 @@ def jouer_tour():
         action_choix_paquets(coup_c[0][0], coup_c[0][1], coup_c[0][2], coup_c[0][3])
     
     print(coup_c[1]," ",m," ",t," ",coup_c[0])
+    print(time()-t1)
 
 
 
@@ -59,10 +62,12 @@ def jouer_tour():
 # l'adversaire (cf tour_precedent)
 def repondre_action_choix_trois():
     global tab_proba
-    act = tour_precedent()
     m = manche()
     t = tour()//2
-    
+
+    act_prece = tour_precedent()
+    act = [act_prece.c1,act_prece.c2,act_prece.c3]
+
     choix = choix3(tab_proba,act,t,m)
 
     repondre_choix_trois(choix)
@@ -73,11 +78,14 @@ def repondre_action_choix_trois():
 # l'adversaire (cf tour_precedent)
 def repondre_action_choix_paquets():
     global tab_proba
-    act = tour_precedent()
     m = manche()
     t = tour()//2
 
+    act_prece = tour_precedent()
+    act = [act_prece.c1,act_prece.c2,act_prece.c3,act_prece.c4]
+
     choix = choix4(tab_proba,act,t,m)
+    repondre_choix_paquets(choix)
     print("6 ",m," ",t," ",act)
 
 
