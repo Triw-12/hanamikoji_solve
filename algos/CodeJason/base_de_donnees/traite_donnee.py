@@ -2,13 +2,10 @@ from random import *
 from math import *
 import pandas as pd
 
-def modif_df(fichier : str,ind_cri : int) :
-    """ Modifie la base de donnée correspondant à ind_cri en fonction des données de fichier"""
-
-
 
 def tab_reussite (ind_cri : int) :
-    """    Renvoie un tableau dont les cases (final) comporte les données des réussites et des totaux conservé dans df """    critere = ["Manche_Couleurs","Manche_Points","Partie","Tour_Couleurs","Tour_Points"]
+    """    Renvoie un tableau dont les cases (final) comporte les données des réussites et des totaux conservé dans df """    
+    critere = ["Manche_Couleurs","Manche_Points","Partie","Tour_Couleurs","Tour_Points"]
     critere_red = ["M_C","M_P","P","T_C","T_P"]
     tab = []
     dft = pd.read_csv(critere[ind_cri]+"//donnee"+critere_red[ind_cri]+".csv")
@@ -314,6 +311,7 @@ def modifie_tab (tab, ind_cri) :
             modif_choix3(tab[i][j][4],tab_reuss[i][j][4])
 
 
+## Test
 # fichier = open("tab_pourc","w")
 # fichier.write(str(init_proba()))
 # fichier.close
