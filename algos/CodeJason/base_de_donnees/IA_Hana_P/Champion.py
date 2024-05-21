@@ -96,7 +96,7 @@ def repondre_action_choix_trois():
 
         choix = choix3(tab_proba,act,m,t)
         repondre_choix_trois(choix)
-        print("5",m,t,act,choix)
+        print(m,t,"5",act,choix)
 
 
 # Fonction appelée lors du choix entre deux paquet lors de l'action de
@@ -142,7 +142,7 @@ def repondre_action_choix_paquets():
 
         choix = choix4(tab_proba,act,m,t)
         repondre_choix_paquets(choix)
-        print("6",m,t,act,choix)
+        print(m,t,"6",act,choix)
 
 
 # Fonction appelée à la fin du jeu

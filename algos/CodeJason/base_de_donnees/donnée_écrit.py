@@ -11,7 +11,7 @@ for cri in critère :
     fichier3 = open(critère_d[ind]+"\\donneechoix4"+cri+".csv","w")
     fichier.write("manche,tour,nmb_carte,class_par_carte_diff,coup,nmb_positif,nmb_totaux\n")
     fichier2.write("manche,tour,coup,nmb_positif1,nmb_totaux1,nmb_positif2,nmb_totaux2,nmb_positif3,nmb_totaux3\n")
-    fichier3.write("manche,tour,coup,nmb_positif1,nmb_totaux2,nmb_positif2,nmb_totaux2\n")
+    fichier3.write("manche,tour,coup,nmb_positif1,nmb_totaux1,nmb_positif2,nmb_totaux2\n")
     for tour in range (3) :
         for manche in range (4) :
             for i in range (7) :
