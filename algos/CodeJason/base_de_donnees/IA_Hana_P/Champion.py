@@ -13,16 +13,21 @@ def init_jeu():
     global MOI
     global tab_proba
     MOI=id_joueur()
-    print("debut de la partie")
+    print("10")
 
+
+## Code
+# 10: debut de la partie
+# 11: debut du tour
+# 12: fin de la partie
+# 13: coup joué sans information associé
 
 
 # Fonction appelée au début du tour
 def jouer_tour():
-    print("debut du tour")
+    print("\n11")
     global MOI
     global tab_proba
-    t1 = time()
 
     m = manche()
     t = tour()//2
@@ -37,8 +42,7 @@ def jouer_tour():
         else :
             action.append(False)
     
-    coup_c = choix_act(tab_proba,main,action,t,m)
-    print(coup_c)
+    coup_c = choix_act(tab_proba,main,action,m,t)
 
     if coup_c[1]==0 :
         action_valider(coup_c[0][0])
@@ -52,8 +56,7 @@ def jouer_tour():
     elif coup_c[1] == 3 :
         action_choix_paquets(coup_c[0][0], coup_c[0][1], coup_c[0][2], coup_c[0][3])
     
-    print(coup_c[1]," ",m," ",t," ",coup_c[0])
-    print(time()-t1)
+    print(m,t,coup_c[1],list(coup_c[0]))
 
 
 
@@ -68,10 +71,32 @@ def repondre_action_choix_trois():
     act_prece = tour_precedent()
     act = [act_prece.c1,act_prece.c2,act_prece.c3]
 
-    choix = choix3(tab_proba,act,t,m)
+    if act[0] == act[1] and act[0] == act[2] :
+        repondre_choix_trois(0)
+        print("13")
 
-    repondre_choix_trois(choix)
-    print("5 ",m," ",t," ",act)
+    else :  
+        if act[0] == act[2] :
+            ech = act[2]
+            act[2] = act[1]
+            act[1] = ech
+
+        elif act[1] == act[2] :
+            ech = act[2]
+            act[2] = act[0]
+            act[0] = ech
+
+        elif act[0] != act[1] :
+            for i in range(3) :
+                for j in range (i+1, 3) :
+                    if act[i] > act[j] :
+                        ech = act[i]
+                        act[i] = act[j]
+                        act[j] = ech 
+
+        choix = choix3(tab_proba,act,m,t)
+        repondre_choix_trois(choix)
+        print("5",m,t,act,choix)
 
 
 # Fonction appelée lors du choix entre deux paquet lors de l'action de
@@ -84,15 +109,46 @@ def repondre_action_choix_paquets():
     act_prece = tour_precedent()
     act = [act_prece.c1,act_prece.c2,act_prece.c3,act_prece.c4]
 
-    choix = choix4(tab_proba,act,t,m)
-    repondre_choix_paquets(choix)
-    print("6 ",m," ",t," ",act)
+    act1 = [act[0],act[1]]
+    act2 = [act[2], act[3]]
+    act3 = [act[3],act[2]]
+
+    if (act1 == act2 or act1 == act3) :
+        repondre_choix_paquets(0)
+        print("13")
+
+    else :
+
+        ech_b = True
+        for i in range (2) :
+            for j in range (2) :
+                if act[i] == act[2 + j] :
+                    ech_b = False
+                    ech = act[0]
+                    act[0] = act[i]
+                    act[i] = ech
+
+                    ech = act[2]
+                    act[2] = act[2 + j]
+                    act[2 + j] = ech
+
+
+        if ech_b :
+            for i in range (2) :
+                if act[2*i] > act[2*i +1]:
+                    ech = act[2*i]
+                    act[2*i] = act[2*i +1]
+                    act[2*i +1] = ech
+
+        choix = choix4(tab_proba,act,m,t)
+        repondre_choix_paquets(choix)
+        print("6",m,t,act,choix)
 
 
 # Fonction appelée à la fin du jeu
 def fin_jeu():
     global MOI
-    print("fin du jeu")
+    print("12")
     nmb_geisha_m = 0
     point_geisha_m = 0
     nmb_geisha_a = 0
@@ -109,29 +165,29 @@ def fin_jeu():
             point_geisha_a += point_g[i]
     
     if point_geisha_m >= 11 :
-        print("V")
+        print("1")
 
     elif point_geisha_a >= 11 :
-        print("D")
+        print("0")
     
     elif nmb_geisha_m >= 4 :
-        print("V")
+        print("1")
 
     elif nmb_geisha_a >= 4 :
-        print("D")
+        print("0")
     
     elif point_geisha_a < point_geisha_m :
-        print("V")
+        print("1")
     
     elif point_geisha_a > point_geisha_m :
-        print("D")
+        print("0")
     
     elif nmb_geisha_a < nmb_geisha_m :
-        print("V")
+        print("1")
     
-    elif point_geisha_a > point_geisha_m :
-        print("D")
+    elif nmb_geisha_a > nmb_geisha_m :
+        print("0")
     
     else :
-        print("D")
+        print("0")
         
