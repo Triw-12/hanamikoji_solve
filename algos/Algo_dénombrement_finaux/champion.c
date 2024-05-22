@@ -249,7 +249,7 @@ void joue_quatre(int c11, int c12, int c21, int c22)
 
 marq *init_marqueur(int k, int n, int *cartes)
 {
-    /*Initialise le marqueur pour choisir k cartes parmis les n cartes dans cartes*/
+    /*Initialise le marqueur pour choisir k cartes parmi les n cartes dans cartes*/
     assert(k < n);
     marq *m = malloc(sizeof(marq));
     m->cartes = cartes;
