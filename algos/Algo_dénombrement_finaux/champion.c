@@ -47,6 +47,7 @@ joueur adv;
 int valeur_couleur[7] = {2, 2, 2, 3, 3, 4, 5};
 int permu_trois[3][2] = {{1, 2}, {0, 2}, {0, 1}};
 int permu_paquet[2][4] = {{0, 1, 2, 3}, {2, 3, 0, 1}};
+int nb_cartes_par_action[4][2] = {{1, 0}, {0, 0}, {2, 1}, {2, 2}};
 
 long t1;
 long currenttime()
@@ -207,12 +208,12 @@ void joue_trois(int c1, int c2, int c3)
     error e = action_choix_trois(c1, c2, c3);
     if (e == OK)
     {
-        printf("Action triple choix cartes : %d, %d %d\n", c1, c2, c3);
+        printf("Action triple choix cartes : %d, %d, %d\n", c1, c2, c3);
     }
     else
     {
         printf("!!!!!!!!!!!!!!!!!!! ERREUR !!!!!!!!!!!: %d\n", e);
-        printf("Action triple choix cartes : %d, %d %d\n", c1, c2, c3);
+        printf("Action triple choix cartes : %d, %d, %d\n", c1, c2, c3);
     }
 }
 
@@ -232,7 +233,7 @@ void joue_quatre(int c11, int c12, int c21, int c22)
     else
     {
         printf("!!!!!!!!!!!!!!!!!!! ERREUR !!!!!!!!!!!: %d\n", e);
-        printf("Action choix paquets cartes : %d %d %d %d\n", c11, c12, c21, c22);
+        printf("Action choix paquets cartes : %d, %d, %d, %d\n", c11, c12, c21, c22);
     }
 }
 
@@ -324,12 +325,77 @@ void free_marq(marq *m)
     free(m);
 }
 
-bool verification(int nb_cartes, int *cartes, int nb_restantes, int *restantes, int nb_selec, int *select)
+bool verification(int nb_cartes, int *cartes, int nb_restantes, int *restantes, int nb_selec, int *select, ETAT *etat, bool *act_poss_simu)
 {
-    return true;
+    int nb_moi_max = 0;
+    int nb_moi_min = 0;
+    for (int i = 0; i < 4; i++)
+    {
+        if (act_poss_simu[i])
+        {
+            nb_moi_max += nb_cartes_par_action[i][0];
+        }
+    }
+    int tour_a = tour();
+    int t;
+    if (moi == 1 && tour_a == 0)
+    {
+        t = 4;
+    }
+    else if (tour_a == 0 || tour_a == 1 || (tour_a == 2 && moi == 1))
+    {
+        t = 3;
+    }
+    else if (tour_a == 2 || tour_a == 3 || (tour_a == 4 && moi == 1))
+    {
+        t = 2;
+    }
+    else if (tour_a == 4 || tour_a == 5 || (tour_a == 6 && moi == 1))
+    {
+        t = 1;
+    }
+    else
+    {
+        t = 0;
+    }
+    if (nb_moi_max - t > 0)
+    {
+        nb_moi_min = nb_moi_max - t;
+    }
+    int nb_moi_borne_inf = 0;
+    int nb_moi_borne_sup = 0;
+    int restantes_d[7];
+    int cartes_d[7];
+    for (int c = 0; c < 7; c++)
+    {
+        restantes_d[c] = restantes[c];
+        cartes_d[c] = cartes[c];
+    }
+    for (int c = 0; c < nb_selec; c++)
+    {
+        restantes_d[select[c]] -= 1;
+        cartes_d[select[c]] -= 1;
+    }
+    for (int c = 0; c < 7; c++)
+    {
+        nb_moi_borne_sup += cartes[c] - cartes_d[c]; // On prend en priorité les cartes qui sont dans notre main
+        if (restantes_d[c] < 0)
+        {
+            nb_moi_borne_inf -= restantes_d[c]; // On prend en priorié les cartes qui ne sont pas dans notre main
+        }
+    }
+    if (nb_moi_borne_inf > nb_moi_max || nb_moi_borne_sup < nb_moi_min)
+    {
+        // printf("Coup impossible %d %d %d %d\n", nb_moi_borne_inf, nb_moi_max, nb_moi_borne_sup, nb_moi_min);
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
-float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restantes, bool action_defausse, ETAT *etat)
+float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restantes, bool action_defausse, ETAT *etat, bool *act_poss_simu)
 {
     D_FLOAT *res = init_d_float();
     int nb_mon_cote = 8;
@@ -356,7 +422,7 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
     marq *defausse;
     while (mon_cote->pointeurs != NULL)
     {
-        if (verification(nb_cartes, cartes, nb_restantes, restantes, nb_mon_cote, mon_cote->pointeurs))
+        if (verification(nb_cartes, cartes, nb_restantes, restantes, nb_mon_cote, mon_cote->pointeurs, etat, act_poss_simu))
         {
             for (int i = 0; i < mon_cote->k; i++)
             {
@@ -451,6 +517,11 @@ void jouer_tour(void)
     etat_simu->avantage = malloc(7 * sizeof(int));
     etat_simu->valide_adv = malloc(7 * sizeof(int));
     etat_simu->valide_moi = malloc(7 * sizeof(int));
+    bool *act_poss_simu = malloc(4 * sizeof(int));
+    for (int i = 0; i < 4; i++)
+    {
+        act_poss_simu[i] = g.act_poss[i];
+    }
     for (int c = 0; c < 7; c++)
     {
         cartes_simu[c] = g.cartes[c];
@@ -462,12 +533,13 @@ void jouer_tour(void)
     ///// VALIDER UNE CARTE
     if (g.act_poss[0])
     {
+        act_poss_simu[0] = false;
         tour_simu = init_marqueur(1, g.en_main, g.cartes);
         while (tour_simu->pointeurs != NULL)
         {
             cartes_simu[tour_simu->pointeurs[0]] -= 1;
             etat_simu->valide_moi[tour_simu->pointeurs[0]] += 1;
-            res = simulation_coup(tour_simu->n - tour_simu->k, cartes_simu, g.nb_restantes, g.restantes, g.act_poss[1], etat_simu);
+            res = simulation_coup(tour_simu->n - tour_simu->k, cartes_simu, g.nb_restantes, g.restantes, g.act_poss[1], etat_simu, act_poss_simu);
             if (res > score_maxi)
             {
                 score_maxi = res;
@@ -480,16 +552,18 @@ void jouer_tour(void)
             choix_cartes(tour_simu);
         }
         free_marq(tour_simu);
+        act_poss_simu[0] = true;
     }
     printf("Fin simu valider\n");
     if (g.act_poss[1])
     {
+        act_poss_simu[1] = false;
         tour_simu = init_marqueur(2, g.en_main, g.cartes);
         while (tour_simu->pointeurs != NULL)
         {
             cartes_simu[tour_simu->pointeurs[0]] -= 1;
             cartes_simu[tour_simu->pointeurs[1]] -= 1;
-            res = simulation_coup(tour_simu->n - tour_simu->k, cartes_simu, g.nb_restantes, g.restantes, false, etat_simu);
+            res = simulation_coup(tour_simu->n - tour_simu->k, cartes_simu, g.nb_restantes, g.restantes, false, etat_simu, act_poss_simu);
             if (res > score_maxi)
             {
                 score_maxi = res;
@@ -503,6 +577,7 @@ void jouer_tour(void)
             choix_cartes(tour_simu);
         }
         free_marq(tour_simu);
+        act_poss_simu[1] = true;
     }
     printf("Fin simu defausser\n");
     float score_mini;
@@ -514,6 +589,7 @@ void jouer_tour(void)
     coup_mini.cartes[3] = -1;
     if (g.act_poss[2])
     {
+        act_poss_simu[2] = false;
         score_mini = 50;
         coup_mini.action = 3;
         tour_simu = init_marqueur(3, g.en_main, g.cartes);
@@ -528,7 +604,7 @@ void jouer_tour(void)
                 etat_simu->valide_moi[tour_simu->pointeurs[permu_trois[c][0]]] += 1;
                 etat_simu->valide_moi[tour_simu->pointeurs[permu_trois[c][1]]] += 1;
 
-                res = simulation_coup(tour_simu->n - tour_simu->k, cartes_simu, g.nb_restantes, g.restantes, g.act_poss[1], etat_simu);
+                res = simulation_coup(tour_simu->n - tour_simu->k, cartes_simu, g.nb_restantes, g.restantes, g.act_poss[1], etat_simu, act_poss_simu);
                 if (res < score_mini)
                 {
                     score_mini = res;
@@ -556,11 +632,13 @@ void jouer_tour(void)
             choix_cartes(tour_simu);
         }
         free_marq(tour_simu);
+        act_poss_simu[2] = true;
     }
     printf("Fin simu choix 3\n");
     int cpt, cpt_adv, place;
     if (g.act_poss[3])
     {
+        act_poss_simu[3] = false;
         coup_mini.action = 4;
         int *cartes_choisis = malloc(7 * sizeof(int));
         int *ordre = malloc(4 * sizeof(int));
@@ -612,7 +690,7 @@ void jouer_tour(void)
                     fflush(stdout);
                 }
                 assert(cpt == 2 && cpt_adv == 4);
-                res = simulation_coup(tour_simu->n - tour_simu->k, cartes_simu, g.nb_restantes, g.restantes, g.act_poss[1], etat_simu);
+                res = simulation_coup(tour_simu->n - tour_simu->k, cartes_simu, g.nb_restantes, g.restantes, g.act_poss[1], etat_simu, act_poss_simu);
                 if (res < score_mini)
                 {
                     score_mini = res;
@@ -631,7 +709,7 @@ void jouer_tour(void)
                 etat_simu->valide_moi[ordre[2]] += 1;
                 etat_simu->valide_moi[ordre[3]] += 1;
 
-                res = simulation_coup(tour_simu->n - tour_simu->k, cartes_simu, g.nb_restantes, g.restantes, g.act_poss[1], etat_simu);
+                res = simulation_coup(tour_simu->n - tour_simu->k, cartes_simu, g.nb_restantes, g.restantes, g.act_poss[1], etat_simu, act_poss_simu);
                 if (res < score_mini)
                 {
                     score_mini = res;
@@ -673,6 +751,7 @@ void jouer_tour(void)
         free_marq(tour_simu);
         free(ordre);
         free(cartes_choisis);
+        act_poss_simu[3] = true;
     }
     printf("FIN SIMU : %d\n", coup_maxi.action);
     if (coup_maxi.action == 1)
@@ -702,6 +781,7 @@ void jouer_tour(void)
     free(etat_simu->valide_adv);
     free(etat_simu->valide_moi);
     free(etat_simu);
+    free(act_poss_simu);
     printf("SCORE : %f\nTEMPS : %ld ms\n\n######################################\n\n", score_maxi, currenttime() - t1);
 }
 
@@ -743,7 +823,7 @@ void repondre_action_choix_trois(void)
         etat_simu->valide_moi[cartes_3[carte_choisie]] += 1;
         etat_simu->valide_adv[cartes_3[permu_trois[carte_choisie][0]]] += 1;
         etat_simu->valide_adv[cartes_3[permu_trois[carte_choisie][1]]] += 1;
-        res = simulation_coup(g.en_main, g.cartes, g.nb_restantes - 3, restantes_simu, g.act_poss[1], etat_simu);
+        res = simulation_coup(g.en_main, g.cartes, g.nb_restantes - 3, restantes_simu, g.act_poss[1], etat_simu, g.act_poss);
 
         if (res > score_maxi)
         {
@@ -802,7 +882,7 @@ void repondre_action_choix_paquets(void)
         etat_simu->valide_moi[cartes_4[permu_paquet[carte_choisie][1]]] += 1;
         etat_simu->valide_adv[cartes_4[permu_paquet[carte_choisie][2]]] += 1;
         etat_simu->valide_adv[cartes_4[permu_paquet[carte_choisie][3]]] += 1;
-        res = simulation_coup(g.en_main, g.cartes, g.nb_restantes - 4, restantes_simu, g.act_poss[1], etat_simu);
+        res = simulation_coup(g.en_main, g.cartes, g.nb_restantes - 4, restantes_simu, g.act_poss[1], etat_simu, g.act_poss);
 
         if (res > score_maxi)
         {
