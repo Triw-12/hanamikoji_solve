@@ -7,9 +7,9 @@
 
 typedef struct etat
 {
-    int *valide_adv;
-    int *valide_moi;
-    int *avantage;
+    int *valide_adv; // Les cartes déjà validés par mon adversaire
+    int *valide_moi; // Les caryes déjà validés par moi
+    int *avantage;   // -1 si l'avantage est à mon adversaire +1 si c'est moi 0 sinon (en fonction de chaque couleur)
 } ETAT;
 
 typedef struct game
@@ -23,14 +23,14 @@ typedef struct game
     int defausee2;
     bool *act_poss;
     ETAT *etat;
-} GAME;
+} GAME; // L'état actuel du jeu
 
 typedef struct marqueurs
 {
-    int k;
-    int n;
-    int *cartes;
-    int *pointeurs;
+    int k;          // la taille de pointeurs // le nombre de cartes choisis
+    int n;          // le nombre de cartes dans lequel on choisit
+    int *cartes;    // Les cartes dans lequel on choisit
+    int *pointeurs; // Les cartes choisis
 } marq;
 
 typedef struct coup
@@ -44,22 +44,24 @@ int manche_accu = -1;
 joueur moi;
 joueur adv;
 
-int valeur_couleur[7] = {2, 2, 2, 3, 3, 4, 5};
-int permu_trois[3][2] = {{1, 2}, {0, 2}, {0, 1}};
-int permu_paquet[2][4] = {{0, 1, 2, 3}, {2, 3, 0, 1}};
-int nb_cartes_par_action[4][2] = {{1, 0}, {0, 0}, {2, 1}, {2, 2}};
+// LES CONSTANTES
+int valeur_couleur[7] = {2, 2, 2, 3, 3, 4, 5};                     // La valeur des couleurs = au nombre de cartes
+int permu_trois[3][2] = {{1, 2}, {0, 2}, {0, 1}};                  // Les deux cartes non choisis
+int permu_paquet[2][4] = {{0, 1, 2, 3}, {2, 3, 0, 1}};             // Les permutations pour deux paquets
+int nb_cartes_par_action[4][2] = {{1, 0}, {0, 0}, {2, 1}, {2, 2}}; // Le nombre de cartes validés par action en fonction des joueurs
 
 long t1;
 long currenttime()
 {
+    /*Renvoie le temps actuel en millisecondes*/
     struct timeval tp;
-
     gettimeofday(&tp, NULL);
     return tp.tv_sec * 1000 + tp.tv_usec / 1000;
 }
 
 void debug_cartes(int nb, int *ens_cartes, char *nom)
 {
+    /*Affiche le paquet de carte ens_cartes comprendant nb cases en affichant nom avant*/
     printf("%s : ", nom);
     for (int i = 0; i < nb; i++)
     {
@@ -71,6 +73,7 @@ void debug_cartes(int nb, int *ens_cartes, char *nom)
 
 void toutes_les_cartes(int *ens_cartes)
 {
+    /*Initialise le tableau ens_cartes aux valeurs contenues dans valeur_couleur (variable globale)*/
     for (int i = 0; i < 7; i++)
     {
         ens_cartes[i] = valeur_couleur[i];
@@ -79,6 +82,7 @@ void toutes_les_cartes(int *ens_cartes)
 
 void aucune_carte(int *ens_cartes)
 {
+    /*Initialise le tableau ens_cartes à 0*/
     for (int i = 0; i < 7; i++)
     {
         ens_cartes[i] = 0;
@@ -87,6 +91,7 @@ void aucune_carte(int *ens_cartes)
 
 void update_cartes_valides(void)
 {
+    /*Met à jour les cartes validées et restantes*/
     toutes_les_cartes(g.restantes);
     g.nb_restantes = 0;
     for (int i = 0; i < 7; i++)
@@ -96,12 +101,12 @@ void update_cartes_valides(void)
         g.restantes[i] = g.restantes[i] - g.etat->valide_moi[i] - g.etat->valide_adv[i] - g.cartes[i];
         g.nb_restantes += g.restantes[i];
     }
-    if (!(g.act_poss[0]))
+    if (!(g.act_poss[0])) // Carte validée secretement
     {
         g.restantes[g.valide] -= 1;
         g.etat->valide_moi[g.valide] += 1;
     }
-    if (!(g.act_poss[1]))
+    if (!(g.act_poss[1])) // Cartes defaussés
     {
         g.restantes[g.defausse1] -= 1;
         g.restantes[g.defausee2] -= 1;
@@ -111,14 +116,15 @@ void update_cartes_valides(void)
 
 void update(bool new_c)
 {
+    /*Met à jour l'état du jeu au début d'un tour*/
     joueur poss;
-    if (manche_accu != manche())
+    if (manche_accu != manche()) // Pour une nouvelle manche
     {
         g.valide = -1;
         g.en_main = 0;
         g.defausse1 = -1;
         g.defausee2 = -1;
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 7; i++) // On regarde les avantages de chaque couleur
         {
             poss = possession_geisha(i);
             if (poss == moi)
@@ -134,13 +140,13 @@ void update(bool new_c)
                 g.etat->avantage[i] = -1;
             }
         }
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++) // Toutes les actions sont à nouveau disponible
         {
             g.act_poss[i] = true;
         }
         int_array lc = cartes_en_main();
         aucune_carte(g.cartes);
-        for (int j = 0; j < lc.length; j++)
+        for (int j = 0; j < lc.length; j++) // Mets à jour les cartes en main
         {
             g.cartes[lc.items[j]] += 1;
             g.en_main += 1;
@@ -150,7 +156,7 @@ void update(bool new_c)
     }
     else
     {
-        if (new_c)
+        if (new_c) // Si c'est juste un nouveau tour, ajoute la carte piochée (si elle existe (en fonction de new_c))
         {
             int pioche = carte_piochee();
             g.cartes[pioche] += 1;
@@ -162,6 +168,7 @@ void update(bool new_c)
 
 void joue_valide(int c)
 {
+    /*Joue l'action valider avec la carte c*/
     g.act_poss[0] = false;
     g.cartes[c] -= 1;
     g.en_main -= 1;
@@ -180,6 +187,7 @@ void joue_valide(int c)
 
 void joue_defausse(int d1, int d2)
 {
+    /*Joue l'action défausser avec les cartes d1 et d2*/
     g.act_poss[1] = false;
     g.cartes[d1] -= 1;
     g.cartes[d2] -= 1;
@@ -200,6 +208,7 @@ void joue_defausse(int d1, int d2)
 
 void joue_trois(int c1, int c2, int c3)
 {
+    /*Joue l'action 3 avec les cartes c1, c2 et c3*/
     g.act_poss[2] = false;
     g.cartes[c1] -= 1;
     g.cartes[c2] -= 1;
@@ -219,6 +228,7 @@ void joue_trois(int c1, int c2, int c3)
 
 void joue_quatre(int c11, int c12, int c21, int c22)
 {
+    /*Joue l'action des paquets avec les cartes c11 et c12 d'un coté, et les cartes c21 et c22 de l'autre*/
     g.act_poss[3] = false;
     g.cartes[c11] -= 1;
     g.cartes[c12] -= 1;
@@ -239,6 +249,8 @@ void joue_quatre(int c11, int c12, int c21, int c22)
 
 marq *init_marqueur(int k, int n, int *cartes)
 {
+    /*Initialise le marqueur pour choisir k cartes parmis les n cartes dans cartes*/
+    assert(k < n);
     marq *m = malloc(sizeof(marq));
     m->cartes = cartes;
     m->k = k;
@@ -248,6 +260,7 @@ marq *init_marqueur(int k, int n, int *cartes)
     int carte = 0;
     while (point < k && carte < 7)
     {
+        // prend la première carte possible
         for (int i = 0; i < cartes[carte] && point < k; i++)
         {
             m->pointeurs[point++] = carte;
@@ -259,10 +272,12 @@ marq *init_marqueur(int k, int n, int *cartes)
 
 void choix_cartes(marq *m)
 {
+    /*Le marqueur m propose un nouveau choix de cartes dans la case pointeur, et NULL s'il en existe plus*/
     int dernier_non_vide = m->k - 1;
     int non_plein = 6;
     int cpt;
     int continuer = true;
+    // cherche la première case vide pour faire avancer un pointeur
     while (dernier_non_vide >= 0 && continuer)
     {
         cpt = m->cartes[non_plein];
@@ -280,7 +295,8 @@ void choix_cartes(marq *m)
         }
         non_plein--;
     }
-    if (dernier_non_vide < 0)
+
+    if (dernier_non_vide < 0) // il n'y a plus de cases vides
     {
         free(m->pointeurs);
         m->pointeurs = NULL;
@@ -296,19 +312,19 @@ void choix_cartes(marq *m)
         cpt = m->cartes[m->pointeurs[dernier_non_vide]] - 1;
         dernier_non_vide++;
         for (int i = 0; i < cpt && dernier_non_vide < m->k; i++)
-        {
+        { // On repositionne les pointeurs suivants
             m->pointeurs[dernier_non_vide++] = non_plein;
         }
         non_plein++;
         while (dernier_non_vide < m->k && non_plein < 7)
-        {
+        { // On décale tous les autres pointeurs
             for (int i = 0; i < m->cartes[non_plein] && dernier_non_vide < m->k; i++)
             {
                 m->pointeurs[dernier_non_vide++] = non_plein;
             }
             non_plein++;
         }
-        if (dernier_non_vide < m->k && non_plein >= 7)
+        if (dernier_non_vide < m->k && non_plein >= 7) // Si les derniers pointeurs n'ont plus la place
         {
             free(m->pointeurs);
             m->pointeurs = NULL;
@@ -318,6 +334,7 @@ void choix_cartes(marq *m)
 
 void free_marq(marq *m)
 {
+    /*Déalloue la mémoire du marqueur m*/
     if (m->pointeurs != NULL)
     {
         free(m->pointeurs);
@@ -327,6 +344,12 @@ void free_marq(marq *m)
 
 bool verification(int nb_cartes, int *cartes, int nb_restantes, int *restantes, int nb_selec, int *select, ETAT *etat, bool *act_poss_simu)
 {
+    /*Vérifie si la distribution des cartes est possible
+    Entree : cartes : les cartes en main
+             restantes : les cartes que l'on a toujours pas vu
+             select : les cartes que l'on voudrait valider de notre coté
+             etat : l'état du jeu
+             act_poss_simu : les actions encore possible (après simulation)*/
     int nb_moi_max = 0;
     int nb_moi_min = 0;
     for (int i = 0; i < 4; i++)
@@ -337,7 +360,7 @@ bool verification(int nb_cartes, int *cartes, int nb_restantes, int *restantes, 
         }
     }
     int tour_a = tour();
-    int t;
+    int t; // Le nombre de cartes que l'on a pas encore vu et qui vont arriver dans notre main
     if (moi == 1 && tour_a == 0)
     {
         t = 4;
@@ -397,6 +420,8 @@ bool verification(int nb_cartes, int *cartes, int nb_restantes, int *restantes, 
 
 float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restantes, bool action_defausse, ETAT *etat, bool *act_poss_simu)
 {
+    /*Simule un coup et renvoie son score pour le coup simulé joué*/
+    // INITIALISATION
     D_FLOAT *res = init_d_float();
     int nb_mon_cote = 8;
     int nb_cote_adv = 8;
@@ -414,12 +439,10 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
         cartes_adv[i] = etat->valide_adv[i] + cartes[i] + restantes[i];
         cartes_moi[i] = etat->valide_moi[i];
     }
-    // printf("mon cote : %d adv : %d\n", nb_mon_cote, nb_cote_adv);
-    // debug_cartes(7, total, "Total");
-    // debug_cartes(7, cartes_adv, "Adv");
-    // debug_cartes(7, cartes_moi, "Moi");
     marq *mon_cote = init_marqueur(nb_mon_cote, nb_total, total);
     marq *defausse;
+
+    // Distribution des cartes
     while (mon_cote->pointeurs != NULL)
     {
         if (verification(nb_cartes, cartes, nb_restantes, restantes, nb_mon_cote, mon_cote->pointeurs, etat, act_poss_simu))
@@ -444,13 +467,15 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
                 {
                     cartes_adv[defausse->pointeurs[i]] -= 1;
                 }
-                ajout(res, diff_score(cartes_moi, cartes_adv, g.etat->avantage));
+                ajout(res, diff_score(cartes_moi, cartes_adv, g.etat->avantage)); // On calcule le score de cette fin de partie
                 for (int i = 0; i < defausse->k; i++)
                 {
                     cartes_adv[defausse->pointeurs[i]] += 1;
                 }
                 choix_cartes(defausse);
             }
+
+            // On remet à l'état initial
             free_marq(defausse);
             for (int i = 0; i < mon_cote->k; i++)
             {
@@ -461,6 +486,8 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
         }
         choix_cartes(mon_cote);
     }
+
+    // Libération de mémoire
     free_marq(mon_cote);
     free(total);
     free(total_s_moi);
@@ -472,6 +499,7 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
 // Fonction appelée au début du jeu
 void init_jeu(void)
 {
+    // ALLOCATION DE MEMOIRE
     t1 = currenttime();
     printf("Debut match\n");
     g.cartes = malloc(7 * sizeof(int));
@@ -496,6 +524,7 @@ void init_jeu(void)
 // Fonction appelée au début du tour
 void jouer_tour(void)
 {
+    // INITIALISATION TOUR
     printf("Debut : manche %d  tour %d\n", manche(), tour());
     t1 = currenttime();
     update(true);
@@ -530,6 +559,7 @@ void jouer_tour(void)
         etat_simu->valide_moi[c] = g.etat->valide_moi[c];
     }
     printf("Fin de copie de l'etat du jeu : %ld\n", currenttime() - t1);
+
     ///// VALIDER UNE CARTE
     if (g.act_poss[0])
     {
@@ -540,7 +570,7 @@ void jouer_tour(void)
             cartes_simu[tour_simu->pointeurs[0]] -= 1;
             etat_simu->valide_moi[tour_simu->pointeurs[0]] += 1;
             res = simulation_coup(tour_simu->n - tour_simu->k, cartes_simu, g.nb_restantes, g.restantes, g.act_poss[1], etat_simu, act_poss_simu);
-            if (res > score_maxi)
+            if (res > score_maxi) // On regarde quel coup à un score maximal
             {
                 score_maxi = res;
                 coup_maxi.action = 1;
@@ -555,6 +585,8 @@ void jouer_tour(void)
         act_poss_simu[0] = true;
     }
     printf("Fin simu valider\n");
+
+    // DEFAUSSER UNE CARTE
     if (g.act_poss[1])
     {
         act_poss_simu[1] = false;
@@ -580,6 +612,7 @@ void jouer_tour(void)
         act_poss_simu[1] = true;
     }
     printf("Fin simu defausser\n");
+
     float score_mini;
     COUP coup_mini;
     coup_mini.cartes = malloc(4 * sizeof(int));
@@ -600,13 +633,14 @@ void jouer_tour(void)
             cartes_simu[tour_simu->pointeurs[2]] -= 1;
             for (int c = 0; c < 3; c++)
             {
+                /*On regarde le score en fonction de la carte qu'il va prendre*/
                 etat_simu->valide_adv[tour_simu->pointeurs[c]] += 1;
                 etat_simu->valide_moi[tour_simu->pointeurs[permu_trois[c][0]]] += 1;
                 etat_simu->valide_moi[tour_simu->pointeurs[permu_trois[c][1]]] += 1;
 
                 res = simulation_coup(tour_simu->n - tour_simu->k, cartes_simu, g.nb_restantes, g.restantes, g.act_poss[1], etat_simu, act_poss_simu);
                 if (res < score_mini)
-                {
+                { // On choisit le score minimisant les coups qu'il fait
                     score_mini = res;
                     coup_mini.cartes[0] = tour_simu->pointeurs[0];
                     coup_mini.cartes[1] = tour_simu->pointeurs[1];
@@ -618,14 +652,14 @@ void jouer_tour(void)
             }
 
             if (score_mini != 50 && score_mini > score_maxi)
-            {
+            { // On choisit le coup qui maximise les 'pires choix possibles'
                 score_maxi = score_mini;
                 coup_maxi.action = coup_mini.action;
                 coup_maxi.cartes[0] = coup_mini.cartes[0];
                 coup_maxi.cartes[1] = coup_mini.cartes[1];
                 coup_maxi.cartes[2] = coup_mini.cartes[2];
             }
-            ////// APRES LA SIMULATION
+            ////// On revient à l'état initial
             cartes_simu[tour_simu->pointeurs[0]] += 1;
             cartes_simu[tour_simu->pointeurs[1]] += 1;
             cartes_simu[tour_simu->pointeurs[2]] += 1;
@@ -635,6 +669,8 @@ void jouer_tour(void)
         act_poss_simu[2] = true;
     }
     printf("Fin simu choix 3\n");
+
+    // CHOIX DES PAQUETS
     int cpt, cpt_adv, place;
     if (g.act_poss[3])
     {
@@ -657,9 +693,11 @@ void jouer_tour(void)
             marq *prem_paquet = init_marqueur(2, 4, cartes_choisis);
             while (prem_paquet->pointeurs != NULL)
             {
+                // Pour chaque possiblité d'associer les cartes 2 par 2
                 cpt = 0;
                 cpt_adv = 2;
                 score_mini = 50;
+                // POSSIBILITE 1 : il prend le premier paquet
                 for (int c = 0; c < 7; c++)
                 {
                     place = 0;
@@ -704,6 +742,7 @@ void jouer_tour(void)
                 etat_simu->valide_moi[ordre[1]] -= 1;
                 etat_simu->valide_adv[ordre[2]] -= 1;
                 etat_simu->valide_adv[ordre[3]] -= 1;
+                // DEUXIEME POSSIBILITE : il prend le deuxième paquet
                 etat_simu->valide_adv[ordre[0]] += 1;
                 etat_simu->valide_adv[ordre[1]] += 1;
                 etat_simu->valide_moi[ordre[2]] += 1;
@@ -737,7 +776,7 @@ void jouer_tour(void)
             }
             free_marq(prem_paquet);
 
-            ////// APRES LA SIMULATION
+            ////// retour à l'état initial
             cartes_simu[tour_simu->pointeurs[0]] += 1;
             cartes_simu[tour_simu->pointeurs[1]] += 1;
             cartes_simu[tour_simu->pointeurs[2]] += 1;
@@ -748,12 +787,14 @@ void jouer_tour(void)
             cartes_choisis[tour_simu->pointeurs[3]] -= 1;
             choix_cartes(tour_simu);
         }
+        // désalocation de la mémoire
         free_marq(tour_simu);
         free(ordre);
         free(cartes_choisis);
         act_poss_simu[3] = true;
     }
     printf("FIN SIMU : %d\n", coup_maxi.action);
+    // Joue l'action
     if (coup_maxi.action == 1)
     {
         joue_valide(coup_maxi.cartes[0]);
@@ -774,6 +815,7 @@ void jouer_tour(void)
     {
         printf("ERREUR ! AUCUNE ACTION JOUEE :\n");
     }
+    // Désallocation de la mémoire
     free(coup_mini.cartes);
     free(coup_maxi.cartes);
     free(cartes_simu);
@@ -789,6 +831,7 @@ void jouer_tour(void)
 // l'adversaire (cf tour_precedent)
 void repondre_action_choix_trois(void)
 {
+    // INITIALISATION
     printf("Repondre choix 3\n");
     t1 = currenttime();
     update(false);
@@ -818,6 +861,8 @@ void repondre_action_choix_trois(void)
         restantes_simu[cartes_3[c]] -= 1;
     }
     debug_cartes(7, restantes_simu, "Restantes_simu");
+
+    // On va simuler si on prend chaqu'une des possibilités
     for (int carte_choisie = 0; carte_choisie < 3; carte_choisie++)
     {
         etat_simu->valide_moi[cartes_3[carte_choisie]] += 1;
@@ -834,6 +879,7 @@ void repondre_action_choix_trois(void)
         etat_simu->valide_adv[cartes_3[permu_trois[carte_choisie][0]]] -= 1;
         etat_simu->valide_adv[cartes_3[permu_trois[carte_choisie][1]]] -= 1;
     }
+    // désallocation de mémoire
     free(restantes_simu);
     free(etat_simu->avantage);
     free(etat_simu->valide_adv);
@@ -847,6 +893,7 @@ void repondre_action_choix_trois(void)
 // l'adversaire (cf tour_precedent)
 void repondre_action_choix_paquets(void)
 {
+    // INITIALISATION
     printf("Repondre choix paquets\n");
     t1 = currenttime();
     update(false);
@@ -876,6 +923,8 @@ void repondre_action_choix_paquets(void)
         restantes_simu[cartes_4[c]] -= 1;
     }
     debug_cartes(7, restantes_simu, "Restantes_simu");
+
+    // On va tester si on prend chaqu'un des deux paquets
     for (int carte_choisie = 0; carte_choisie < 2; carte_choisie++)
     {
         etat_simu->valide_moi[cartes_4[permu_paquet[carte_choisie][0]]] += 1;
@@ -894,6 +943,7 @@ void repondre_action_choix_paquets(void)
         etat_simu->valide_adv[cartes_4[permu_paquet[carte_choisie][2]]] -= 1;
         etat_simu->valide_adv[cartes_4[permu_paquet[carte_choisie][3]]] -= 1;
     }
+    // désalocation de la mémoire
     free(restantes_simu);
     free(etat_simu->avantage);
     free(etat_simu->valide_adv);
@@ -906,6 +956,7 @@ void repondre_action_choix_paquets(void)
 // Fonction appelée à la fin du jeu
 void fin_jeu(void)
 {
+    // Désallocation de la mémoire
     free(g.cartes);
     free(g.etat->valide_adv);
     free(g.etat->valide_moi);
