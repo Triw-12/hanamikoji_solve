@@ -263,8 +263,8 @@ def nmb_moy(main, deck, action) :
 
 
 
-# main=[0,0,1,3,3,5,6,6,6]
-# main2 = [0,0,0,2,5,6,6,0,6,6]
+main=[0,0,1,3,3,5,6,6,6]
+#main2 = [0,0,0,2,5,6,6,0,6,6]
 # print(tri_occ(main))
 # print(sous_manche(main,[False,False,False,True]))
 # print(tri_occ(main2))
@@ -280,3 +280,5 @@ def nmb_moy(main, deck, action) :
 #print(nmb_combi_tour([5,5,5,4,4,2],[True,True,True,True]))
 
 #print(combi_to_nmb([0,0,1,4,4,5,2,2,2,2,4]))
+true = True
+print(nmb_moy(main,[1,4,2,4],[true,true,true,true]))

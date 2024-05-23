@@ -37,26 +37,30 @@ def jouer_tour():
 
     action = []
     for i in range (4):
-        if not(est_jouee_action(MOI,i)) :
-            action.append(True)
-        else :
-            action.append(False)
+        
+        action.append(not(est_jouee_action(MOI,i)))
     
-    coup_c = choix_act(tab_proba,main,action,m,t)
+    if action == [False,False,True,False] and main == [6,6,6] :
+        action_choix_trois(6,6,6)
+        print(m,t,2,[6,6,6])
 
-    if coup_c[1]==0 :
-        action_valider(coup_c[0][0])
+    else : 
 
-    elif coup_c[1]==1 :
-        action_defausser(coup_c[0][0], coup_c[0][1])
+        coup_c = choix_act(tab_proba,main,action,m,t)
+
+        if coup_c[1]==0 :
+            action_valider(coup_c[0][0])
+
+        elif coup_c[1]==1 :
+            action_defausser(coup_c[0][0], coup_c[0][1])
+        
+        elif coup_c[1] == 2 :
+            action_choix_trois(coup_c[0][0], coup_c[0][1], coup_c[0][2])
+
+        elif coup_c[1] == 3 :
+            action_choix_paquets(coup_c[0][0], coup_c[0][1], coup_c[0][2], coup_c[0][3])
     
-    elif coup_c[1] == 2 :
-        action_choix_trois(coup_c[0][0], coup_c[0][1], coup_c[0][2])
-
-    elif coup_c[1] == 3 :
-        action_choix_paquets(coup_c[0][0], coup_c[0][1], coup_c[0][2], coup_c[0][3])
-    
-    print(m,t,coup_c[1],list(coup_c[0]))
+        print(m,t,coup_c[1],list(coup_c[0]))
 
 
 
@@ -118,12 +122,28 @@ def repondre_action_choix_paquets():
         print("13")
 
     else :
+        ech_eff = False
 
-        ech_b = True
-        for i in range (2) :
+        if act[2] == act[3] :   #Met le paquet doublons comme le premiers paquets
+            ech = act[0]
+            act[0] = act[2]
+            act[2] = ech
+
+            ech = act[1]
+            act[1] = act[1]
+            act[1] = ech
+
+            ech_eff = True
+            
+        doubl_paq = act[0] == act[1]
+        
+        
+        doubl_diff = False   
+        for i in range (2) :     # Met les doublons des paquets différents en premier de chaque paquet
             for j in range (2) :
                 if act[i] == act[2 + j] :
-                    ech_b = False
+                    doubl_diff = True
+
                     ech = act[0]
                     act[0] = act[i]
                     act[i] = ech
@@ -133,16 +153,39 @@ def repondre_action_choix_paquets():
                     act[2 + j] = ech
 
 
-        if ech_b :
-            for i in range (2) :
+        if doubl_diff and not(doubl_paq) : #Echange dans le cas de premier égaux et second mal placé
+            if act[1] > act[3] :
+                ech_eff = True
+
+                ech = act[1]
+                act[1] = act[3]
+                act[3] = ech
+
+
+        if not (doubl_diff) :
+            for i in range (2) :    #echange les cartes dans un paquet dans le cas d'une mauvaise configuration
                 if act[2*i] > act[2*i +1]:
                     ech = act[2*i]
                     act[2*i] = act[2*i +1]
                     act[2*i +1] = ech
+                
+            if act[0] > act[2] :    #echange les deux paquets
+                ech = act[0]
+                act[0] = act[2]
+                act[2] = ech
+                ech = act[1]
+                act[1] = act[3]
+                act[3] = ech
+                ech_eff = True
+
 
         choix = choix4(tab_proba,act,m,t)
-        repondre_choix_paquets(choix)
-        print(m,t,"6",act,choix)
+        if ech_eff :
+            repondre_choix_paquets(choix+1 %2)
+            print(m,t,"6",act,choix+1 %2)
+        else :
+            repondre_choix_paquets(choix)
+            print(m,t,"6",act,choix)
 
 
 # Fonction appelée à la fin du jeu
