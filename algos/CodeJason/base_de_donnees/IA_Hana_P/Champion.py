@@ -39,10 +39,6 @@ def jouer_tour():
     for i in range (4):
         
         action.append(not(est_jouee_action(MOI,i)))
-    
-    if action == [False,False,True,False] and main == [6,6,6] :
-        action_choix_trois(6,6,6)
-        print(m,t,2,[6,6,6])
 
     else : 
 
@@ -74,6 +70,7 @@ def repondre_action_choix_trois():
 
     act_prece = tour_precedent()
     act = [act_prece.c1,act_prece.c2,act_prece.c3]
+    tab_ind = [0,1,2]
 
     if act[0] == act[1] and act[0] == act[2] :
         repondre_choix_trois(0)
@@ -84,11 +81,15 @@ def repondre_action_choix_trois():
             ech = act[2]
             act[2] = act[1]
             act[1] = ech
+            tab_ind[2] = 1
+            tab_ind[1] = 2
 
         elif act[1] == act[2] :
             ech = act[2]
             act[2] = act[0]
             act[0] = ech
+            tab_ind[0] = 2
+            tab_ind[2] = 0
 
         elif act[0] != act[1] :
             for i in range(3) :
@@ -96,10 +97,13 @@ def repondre_action_choix_trois():
                     if act[i] > act[j] :
                         ech = act[i]
                         act[i] = act[j]
-                        act[j] = ech 
+                        act[j] = ech
+                        tab_ind[i] = j
+                        tab_ind[j] = i
 
         choix = choix3(tab_proba,act,m,t)
-        repondre_choix_trois(choix)
+
+        repondre_choix_trois(tab_ind[choix])
         print(m,t,"5",act,choix)
 
 
@@ -130,8 +134,8 @@ def repondre_action_choix_paquets():
             act[2] = ech
 
             ech = act[1]
-            act[1] = act[1]
-            act[1] = ech
+            act[1] = act[3]
+            act[3] = ech
 
             ech_eff = True
             
@@ -162,14 +166,14 @@ def repondre_action_choix_paquets():
                 act[3] = ech
 
 
-        if not (doubl_diff) :
+        if not (doubl_diff ) :
             for i in range (2) :    #echange les cartes dans un paquet dans le cas d'une mauvaise configuration
                 if act[2*i] > act[2*i +1]:
                     ech = act[2*i]
                     act[2*i] = act[2*i +1]
                     act[2*i +1] = ech
                 
-            if act[0] > act[2] :    #echange les deux paquets
+            if act[0] > act[2] and (not(doubl_paq) or act[2] == act[3]):    #echange les deux paquets
                 ech = act[0]
                 act[0] = act[2]
                 act[2] = ech
@@ -181,8 +185,8 @@ def repondre_action_choix_paquets():
 
         choix = choix4(tab_proba,act,m,t)
         if ech_eff :
-            repondre_choix_paquets(choix+1 %2)
-            print(m,t,"6",act,choix+1 %2)
+            repondre_choix_paquets((choix+1) %2)
+            print(m,t,"6",act,choix)
         else :
             repondre_choix_paquets(choix)
             print(m,t,"6",act,choix)

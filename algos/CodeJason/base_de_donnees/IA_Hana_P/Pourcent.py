@@ -27,7 +27,7 @@ def choix_aleatoire (lst_pourc) :
 
 
 
-def combi_possible(action_j : int, nmb_combi : int) :
+def combi_possible(action_j : int, nmb_combi : list) :
     """Renvois une liste contenant le nombre de carte différente possible à joué"""
 
     if action_j == 0 :
@@ -47,7 +47,7 @@ def combi_possible(action_j : int, nmb_combi : int) :
             return lst_combi
         
         else :
-            if nmb_combi[action_j-1] > 0 and nmb_combi[0] > 0 :
+            if nmb_combi[action_j-1] > 0 and nmb_combi[0] > 1 :
                 lst_combi.append(1)
         
             if action_j == 2 :

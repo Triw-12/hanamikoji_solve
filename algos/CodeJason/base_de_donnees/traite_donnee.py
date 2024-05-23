@@ -95,7 +95,8 @@ def init_proba () :
             dfc3_2 = dfc3_1[dfc3_1["tour"] == 1]
             tab[i][j].append({})
             for e in dfc3_2.values :
-                tab[i][j][4][e[2]] = [34,33,33] 
+                
+                tab[i][j][4][e[2]] = [334,333,333] 
             
             
             #Choix 4
@@ -103,7 +104,7 @@ def init_proba () :
             dfc4_2 = dfc4_1[dfc4_1["tour"] == 1]
             tab[i][j].append({})
             for e in dfc4_2 .values :
-                tab[i][j][5][e[2]] = [50,50]
+                tab[i][j][5][e[2]] = [500,500]
     
     return tab
 

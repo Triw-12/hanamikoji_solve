@@ -1,3 +1,5 @@
+Parcouru = []
+
 def appartient(lst, elem):
     """ Renvoie true si elem est dans lst et false sinon"""
     for e in lst :
@@ -66,25 +68,25 @@ def combi_to_nmb (lst) :
 
 
 
-# def nmb_combi_tour (lst, action) :
-#     """" Renvois le nombre de sous manche de lst """
+def nmb_combi_tour (lst, action) :
+    """" Renvois le nombre de sous manche de lst """
 
-#     nmb_c=combi_to_nmb(lst)
-#     total=0
+    nmb_c=combi_to_nmb(lst)
+    total=0
 
-#     if action[0] :
-#         total +=nmb_c[0]
+    if action[0] :
+        total +=nmb_c[0]
 
-#     if action[1] :
-#         total += nmb_c[1] + (nmb_c[0]*(nmb_c[0]-1))/2
+    if action[1] :
+        total += nmb_c[1] + (nmb_c[0]*(nmb_c[0]-1))/2
     
-#     if action[2] :
-#         total += nmb_c[2] + 2* nmb_c[1]*(nmb_c[0]-1) + 3* (nmb_c[0]-1)*nmb_c[0]*(2*nmb_c[0]-4)/12
+    if action[2] :
+        total += nmb_c[2] + 2* nmb_c[1]*(nmb_c[0]-1) + 3* (nmb_c[0]-1)*nmb_c[0]*(2*nmb_c[0]-4)/12
     
-#     if action[3] :
-#         total += nmb_c[3] + 2* nmb_c[2]*(nmb_c[0]-1) + 3* nmb_c[1]*(nmb_c[1]-1)/2 + 4* nmb_c[1]*( (nmb_c[0]-1) * (nmb_c[0]-2)/2) + 6* nmb_c[0]*(nmb_c[0]-1)* (nmb_c[0]*nmb_c[0]-5*nmb_c[0]+6)/24
+    if action[3] :
+        total += nmb_c[3] + 2* nmb_c[2]*(nmb_c[0]-1) + 3* nmb_c[1]*(nmb_c[1]-1)/2 + 4* nmb_c[1]*( (nmb_c[0]-1) * (nmb_c[0]-2)/2) + 6* nmb_c[0]*(nmb_c[0]-1)* (nmb_c[0]*nmb_c[0]-5*nmb_c[0]+6)/24
     
-#     return total
+    return total
 
 
 
@@ -224,6 +226,14 @@ def sous_manche (main, action) :
 def nmb_moy(main, deck, action) :
     """Renvois le nombre de combinaison total sur une partie commenceant par main et deck, avec les actions disponible dans action"""
 
+    global Parcouru
+
+    if appartient(Parcouru,[main,action]) :
+        return 1
+
+    else :
+        Parcouru.append([main,action])
+
     if action==[False,False,False,False] :
         return 1
 
@@ -263,8 +273,8 @@ def nmb_moy(main, deck, action) :
 
 
 
-# main=[0,0,1,3,3,5,6,6,6]
-# main2 = [0,0,0,2,5,6,6,0,6,6]
+#main=[0,0,1,3,3,5,6,6,6]
+#main2 = [0,0,0,2,5,6,6,0,6,6]
 # print(tri_occ(main))
 # print(sous_manche(main,[False,False,False,True]))
 # print(tri_occ(main2))
@@ -280,3 +290,5 @@ def nmb_moy(main, deck, action) :
 #print(nmb_combi_tour([5,5,5,4,4,2],[True,True,True,True]))
 
 #print(combi_to_nmb([0,0,1,4,4,5,2,2,2,2,4]))
+#true = True
+#print(nmb_moy(main,[1,4,2,4],[true,true,true,true]))
