@@ -107,27 +107,15 @@ int main()
     int *cm = malloc(7 * sizeof(int));
     int *ca = malloc(7 * sizeof(int));
     int *av = malloc(7 * sizeof(int));
-    cm[0] = 2;
-    cm[1] = 2;
-    cm[2] = 2;
-    cm[3] = 2;
-    cm[4] = 0;
-    cm[5] = 0;
-    cm[6] = 0;
-    ca[0] = 0;
-    ca[1] = 0;
-    ca[2] = 0;
-    ca[3] = 1;
-    ca[4] = 1;
-    ca[5] = 3;
-    ca[6] = 3;
-    av[0] = 0;
-    av[1] = 0;
-    av[2] = 0;
-    av[3] = 0;
-    av[4] = 0;
-    av[5] = 0;
-    av[6] = 0;
+    int cm_i[7] = {2, 2, 2, 2, 0, 0, 0};
+    int ca_i[7] = {0, 0, 0, 1, 1, 3, 3};
+    int av_i[7] = {0, 0, 0, 0, 0, 0, 0};
+    for (int i = 0; i < 7; i++)
+    {
+        cm[i] = cm_i[i];
+        ca[i] = ca_i[i];
+        av[i] = av_i[i];
+    }
     printf("%d\n", diff_score(cm, ca, av));
     D_FLOAT *r = init_d_float();
     ajout(r, diff_score(cm, ca, av));
