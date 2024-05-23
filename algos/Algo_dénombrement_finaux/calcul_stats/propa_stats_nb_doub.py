@@ -1,6 +1,8 @@
 import random as r
 from tqdm import tqdm
 
+## On compte le nombre de doublons initials puis le nombre de doublons finaux
+
 max_doubl = [0, 7, 7, 4, 2, 1]
 dico = {}
 tour_boucle = 100000
@@ -58,8 +60,18 @@ for n in range(1, 21):
                                     comtage[cartes_doub] = (
                                         comtage.get(cartes_doub, 0) + 1
                                     )
+                                cartes.insert(0, k)
                                 cartes.insert(0, n)
                                 cartes = tuple(cartes)
                                 dico[cartes] = comtage
                                 bar.update(1)
+
+fichier = open("stats_nb_doub.txt", "w")
+fichier.write(f"{len(dico)}\n")
+for k, v in dico.items():
+    fichier.write(f"{k[0]} {k[1]} {k[2]} {k[3]} {k[4]} {k[5]} {k[6]} {len(v)} ")
+    for v1, v2 in v.items():
+        fichier.write(f"{v1[0]} {v1[1]} {v1[2]} {v1[3]} {v1[4]} {v2} ")
+    fichier.write("\n")
+
 print(dico)
