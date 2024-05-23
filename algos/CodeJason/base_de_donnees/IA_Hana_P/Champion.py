@@ -207,7 +207,7 @@ def fin_jeu():
         if possession_geisha(i) == MOI :
             nmb_geisha_m+=1
             point_geisha_m += point_g[i]
-        elif possession_geisha != 2 :
+        elif possession_geisha(i) != (MOI+1) % 2 :
             nmb_geisha_a+=1
             point_geisha_a += point_g[i]
     
