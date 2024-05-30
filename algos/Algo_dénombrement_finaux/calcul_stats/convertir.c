@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#define N_MAX 10
+#include <time.h>
+#define N_MAX 237
 
 struct sixuplet
 {
@@ -24,14 +25,50 @@ struct dictonnaire_lineraire
 
 typedef struct dictionnaire_lineraire DICO;
 
-int lin(int n, int k, int s, int d, int t, int q4, int q5)
+int lin(int k, int s, int d, int t, int q4, int q5)
 {
+    return 1920 * (k - 1) + 240 * s + 30 * d + 6 * t + 2 * q4 + q5;
+}
+
+int *delin(int i)
+{
+    int *res = malloc(6 * sizeof(int));
+    res[5] = i % 2;
+    i = i / 2;
+    res[4] = i % 3;
+    i = i / 3;
+    res[3] = i % 5;
+    i = i / 5;
+    res[2] = i % 8;
+    i = i / 8;
+    res[1] = i % 8;
+    i = i / 8;
+    res[0] = i;
+    return res;
 }
 
 void creation(char *nom)
 {
+    int j;
+    SIX ***res_s = malloc(sizeof(20 * sizeof(SIX **)));
+    SIX base = {.s = -1, .d = -1, .t = -1, .q4 = -1, .q5 = -1, .prob = -1};
+    for (int i = 0; i < 20; i++)
+    {
+        printf("%d\n", i);
+        j = (1920 * (i + 1) + 240 * 8 + 30 * 8 + 6 * 5 + 2 * 3 + 2);
+        res_s[i] = malloc(j * sizeof(SIX *));
+        for (int k = 0; k < j; k++)
+        {
+            res_s[i][k] = malloc(N_MAX * sizeof(SIX));
+            for (int l = 0; l < N_MAX; l++)
+            {
+                res_s[i][k][l] = base;
+            }
+        }
+    }
+    SIX en_place;
     FILE *fichier = fopen(nom, "r");
-    int nb, nb_f;
+    int nb, nb_f, cpt, ind;
     int nb_f_max = 0;
     int nb_lecture = 1;
     int init[7];
@@ -52,21 +89,33 @@ void creation(char *nom)
         {
             nb_f_max = nb_f;
         }
+        ind = lin(init[1], init[2], init[3], init[4], init[5], init[6]);
         for (int j = 0; j < nb_f; j++)
         {
+            cpt = 0;
             for (int l = 0; l < 6; l++)
             {
                 fscanf(fichier, "%d", &res[l]);
                 nb_lecture++;
             }
+            en_place.s = res[0];
+            en_place.d = res[1];
+            en_place.t = res[2];
+            en_place.q4 = res[3];
+            en_place.q5 = res[4];
+            en_place.prob = res[5];
+            res_s[res[0]][ind][cpt++] = en_place;
         }
     }
-    printf("%d\n", nb_f_max);
+    // printf("%d\n", nb_f_max);
 }
 
 int main()
 {
+    int t1 = time(NULL);
     creation("stats_cartes_doub.txt");
     // creation("stats_nb_doub.txt");
+    int t2 = time(NULL);
+    printf("Temps : %d\n", t2 - t1);
     return 0;
 }

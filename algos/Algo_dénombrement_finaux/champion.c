@@ -213,7 +213,7 @@ void joue_trois(int c1, int c2, int c3)
     g.cartes[c1] -= 1;
     g.cartes[c2] -= 1;
     g.cartes[c3] -= 1;
-    g.en_main -= 4;
+    g.en_main -= 3;
     error e = action_choix_trois(c1, c2, c3);
     if (e == OK)
     {
@@ -271,6 +271,8 @@ marq *init_marqueur(int k, int n, int *cartes)
     }
     else
     {
+        printf("###################################################################################################################### k : %d n : %d\n", k, n);
+        debug_cartes(7, cartes, "Cartes initialisés : ");
         m->pointeurs = NULL;
     }
     return m;
@@ -534,18 +536,18 @@ void jouer_tour(void)
     printf("Debut : manche %d  tour %d\n", manche(), tour());
     t1 = currenttime();
     update(true);
-    printf("Update termine : defausser %d\n", g.act_poss[1]);
+    printf("Update termine : 1: %d 2: %d 3 : %d 4: %d en main : %d\n", g.act_poss[0], g.act_poss[1], g.act_poss[2], g.act_poss[3], g.en_main);
     debug_cartes(7, g.cartes, "Mes cartes");
     debug_cartes(7, g.restantes, "Cartes restantes");
     float score_maxi = -50;
     COUP coup_maxi;
+    coup_maxi.action = -1;
     coup_maxi.cartes = malloc(4 * sizeof(int));
     coup_maxi.cartes[0] = -1;
     coup_maxi.cartes[1] = -1;
     coup_maxi.cartes[2] = -1;
     coup_maxi.cartes[3] = -1;
     float res;
-
     marq *tour_simu;
     int *cartes_simu = malloc(7 * sizeof(int));
     ETAT *etat_simu = malloc(sizeof(ETAT));
@@ -565,6 +567,7 @@ void jouer_tour(void)
         etat_simu->valide_moi[c] = g.etat->valide_moi[c];
     }
     printf("Fin de copie de l'etat du jeu : %ld\n", currenttime() - t1);
+    fflush(stdout);
 
     ///// VALIDER UNE CARTE
     if (g.act_poss[0])
@@ -800,6 +803,7 @@ void jouer_tour(void)
         act_poss_simu[3] = true;
     }
     printf("FIN SIMU : %d\n", coup_maxi.action);
+    fflush(stdout);
     // Joue l'action
     if (coup_maxi.action == 1)
     {
