@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#define N_MAX 237
+#include <assert.h>
+#define N_MAX 238
 
 struct sixuplet
 {
@@ -50,16 +51,19 @@ int *delin(int i)
 void creation(char *nom)
 {
     int j;
-    SIX ***res_s = malloc(sizeof(21 * sizeof(SIX **)));
+    SIX ***res_s = malloc(20*sizeof(SIX **));
+    assert(res_s != NULL);
     SIX base = {.s = -1, .d = -1, .t = -1, .q4 = -1, .q5 = -1, .prob = -1};
     for (int i = 0; i < 20; i++)
     {
         printf("%d\n", i);
         j = (1920 * (i + 1) + 240 * 8 + 30 * 8 + 6 * 5 + 2 * 3 + 2);
         res_s[i] = malloc(j * sizeof(SIX *));
+        assert(res_s[i] != NULL);
         for (int k = 0; k < j; k++)
         {
             res_s[i][k] = malloc(N_MAX * sizeof(SIX));
+            assert(res_s[i][k] != NULL);
             for (int l = 0; l < N_MAX; l++)
             {
                 res_s[i][k][l] = base;
@@ -90,9 +94,11 @@ void creation(char *nom)
             nb_f_max = nb_f;
         }
         ind = lin(init[1], init[2], init[3], init[4], init[5], init[6]);
+        printf("Init : %d %d %d %d %d %d %d\n",init[0],init[1], init[2], init[3], init[4], init[5], init[6]);
+        printf("Ind : %d\n",ind);
+        cpt = 0;
         for (int j = 0; j < nb_f; j++)
         {
-            cpt = 0;
             for (int l = 0; l < 6; l++)
             {
                 fscanf(fichier, "%d", &res[l]);
@@ -104,7 +110,9 @@ void creation(char *nom)
             en_place.q4 = res[3];
             en_place.q5 = res[4];
             en_place.prob = res[5];
-            res_s[res[0]][ind][cpt++] = en_place;
+            printf("Res : %d %d %d %d %d %d %d\n",res[0],res[1], res[2], res[3], res[4], res[5],cpt);
+            res_s[init[0]-1][ind][cpt++] = en_place;
+            printf("OK\n");
         }
     }
     // printf("%d\n", nb_f_max);
