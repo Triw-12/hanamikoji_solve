@@ -1,30 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <time.h>
-#include <assert.h>
-#define N_MAX 238
-
-struct sixuplet
-{
-    int s;
-    int d;
-    int t;
-    int q4;
-    int q5;
-    int prob;
-};
-
-typedef struct sixuplet SIX;
-
-struct dictonnaire_lineraire
-{
-    int nb; // Le nb de cases
-    int *k_p;
-    SIX **dict;
-};
-
-typedef struct dictionnaire_lineraire DICO;
+#include "convertir.h"
 
 int lin(int k, int s, int d, int t, int q4, int q5)
 {
@@ -48,10 +22,10 @@ int *delin(int i)
     return res;
 }
 
-void creation(char *nom)
+SIX ***creation(char *nom)
 {
     int j;
-    SIX ***res_s = malloc(20*sizeof(SIX **));
+    SIX ***res_s = malloc(20 * sizeof(SIX **));
     assert(res_s != NULL);
     SIX base = {.s = -1, .d = -1, .t = -1, .q4 = -1, .q5 = -1, .prob = -1};
     for (int i = 0; i < 20; i++)
@@ -94,8 +68,8 @@ void creation(char *nom)
             nb_f_max = nb_f;
         }
         ind = lin(init[1], init[2], init[3], init[4], init[5], init[6]);
-        printf("Init : %d %d %d %d %d %d %d\n",init[0],init[1], init[2], init[3], init[4], init[5], init[6]);
-        printf("Ind : %d\n",ind);
+        printf("Init : %d %d %d %d %d %d %d\n", init[0], init[1], init[2], init[3], init[4], init[5], init[6]);
+        printf("Ind : %d\n", ind);
         cpt = 0;
         for (int j = 0; j < nb_f; j++)
         {
@@ -110,12 +84,43 @@ void creation(char *nom)
             en_place.q4 = res[3];
             en_place.q5 = res[4];
             en_place.prob = res[5];
-            printf("Res : %d %d %d %d %d %d %d\n",res[0],res[1], res[2], res[3], res[4], res[5],cpt);
-            res_s[init[0]-1][ind][cpt++] = en_place;
+            printf("Res : %d %d %d %d %d %d %d\n", res[0], res[1], res[2], res[3], res[4], res[5], cpt);
+            res_s[init[0] - 1][ind][cpt++] = en_place;
             printf("OK\n");
         }
     }
     // printf("%d\n", nb_f_max);
+    return res_s;
+}
+
+int proba(SIX ***tab, int n, int k, SIX debut, SIX arrive)
+{
+    int ind = lin(k, debut.s, debut.d, debut.t, debut.q4, debut.q5);
+    SIX val;
+    for (int i = 0; i < N_MAX; i++)
+    {
+        val = tab[n][ind][i];
+        assert(val.s != -1);
+        if (val.s == arrive.s && val.d == arrive.d && val.t == arrive.t && val.q4 == arrive.q4 && val.q5 == arrive.q5)
+        {
+            return val.prob;
+        }
+    }
+}
+
+void free_six(SIX ***s)
+{
+    int j;
+    for (int i = 0; i < 20; i++)
+    {
+        j = (1920 * (i + 1) + 240 * 8 + 30 * 8 + 6 * 5 + 2 * 3 + 2);
+        for (int k = 0; k < j; k++)
+        {
+            free(s[i][k]);
+        }
+        free(s[i]);
+    }
+    free(s);
 }
 
 int main()

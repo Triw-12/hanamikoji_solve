@@ -475,7 +475,7 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
                 {
                     cartes_adv[defausse->pointeurs[i]] -= 1;
                 }
-                ajout(res, diff_score(cartes_moi, cartes_adv, g.etat->avantage)); // On calcule le score de cette fin de partie
+                ajout(res, cartes_moi, cartes_adv, g.etat->avantage, mon_cote->n, mon_cote->k, mon_cote->cartes, mon_cote->pointeurs, defausse->n, defausse->k, defausse->cartes, defausse->pointeurs); // On calcule le score de cette fin de partie
                 for (int i = 0; i < defausse->k; i++)
                 {
                     cartes_adv[defausse->pointeurs[i]] += 1;

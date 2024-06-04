@@ -80,54 +80,19 @@ D_FLOAT *init_d_float(void)
     D_FLOAT *res = malloc(sizeof(D_FLOAT));
     res->pond = 0;
     res->som = 0;
-    res->stats = creation("stats_cartes_doub.txt");
+    res->stats = NULL;
     return res;
 }
 
-SIX doublons(int *cartes)
+float ponderation(void)
 {
-    SIX res = {.s = 0, .d = 0, .t = 0, .q4 = 0, .q5 = 0, .prob = 0};
-    for (int i = 0; i < 7; i++)
-    {
-        switch (cartes[i])
-        {
-        case 1:
-            res.s += 1;
-            break;
-        case 2:
-            res.d += 1;
-            break;
-        case 3:
-            res.t += 1;
-            break;
-        case 4:
-            res.q4 += 1;
-            break;
-        case 5:
-            res.q5 += 1;
-            break;
-        default:
-            break;
-        }
-    }
-    return res;
-}
-
-float ponderation(D_FLOAT *simu, int n_m, int k_m, int *cartes_m, int *choix_m, int n_d, int k_d, int *cartes_d, int *choix_d)
-{
-    SIX doub_dep = doublons(cartes_m);
-    SIX doub_fin = doublons(choix_m);
-    int prob = proba(simu->stats, n_m, k_m, doub_dep, doub_fin);
-    SIX doub_dep_d = doublons(cartes_d);
-    SIX doub_fin_d = doublons(choix_d);
-    int prob_d = proba(simu->stats, n_d, k_d, doub_dep_d, doub_fin_d);
-    return prob + prob_d;
+    return 1;
 }
 
 void ajout(D_FLOAT *simu, int *cartes_moi, int *cartes_adv, int *avantages, int n_m, int k_m, int *cartes_m, int *choix_m, int n_d, int k_d, int *cartes_d, int *choix_d)
 {
     int sco = diff_score(cartes_moi, cartes_adv, avantages);
-    float p = ponderation(simu, n_m, k_m, cartes_m, choix_m, n_d, k_d, cartes_d, choix_d);
+    float p = ponderation();
     simu->som += sco * p;
     simu->pond += p;
 }
@@ -141,5 +106,26 @@ float total_simu(D_FLOAT *simu)
 
 int main()
 {
+    /*
+    //            TESTS
+    int *cm = malloc(7 * sizeof(int));
+    int *ca = malloc(7 * sizeof(int));
+    int *av = malloc(7 * sizeof(int));
+    int cm_i[7] = {2, 2, 2, 2, 0, 0, 0};
+    int ca_i[7] = {0, 0, 0, 1, 1, 3, 3};
+    int av_i[7] = {0, 0, 0, 0, 0, 0, 0};
+    for (int i = 0; i < 7; i++)
+    {
+        cm[i] = cm_i[i];
+        ca[i] = ca_i[i];
+        av[i] = av_i[i];
+    }
+    printf("%d\n", cm, ca, av, cm, ca);
+    D_FLOAT *r = init_d_float();
+    ajout(r, cm, ca, av, cm, ca);
+    printf("%f\n", total_simu(r));
+    free(ca);
+    free(cm);
+    free(av);*/
     return 0;
 }
