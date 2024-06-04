@@ -50,7 +50,7 @@ int *delin(int i)
 void creation(char *nom)
 {
     int j;
-    SIX ***res_s = malloc(sizeof(20 * sizeof(SIX **)));
+    SIX ***res_s = malloc(sizeof(21 * sizeof(SIX **)));
     SIX base = {.s = -1, .d = -1, .t = -1, .q4 = -1, .q5 = -1, .prob = -1};
     for (int i = 0; i < 20; i++)
     {
