@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "calcul_score.h"
 #include <sys/time.h>
+#include "convertir.h"
 
 typedef struct etat
 {
@@ -43,6 +44,7 @@ GAME g;
 int manche_accu = -1;
 joueur moi;
 joueur adv;
+SIX*** donnes;
 
 // LES CONSTANTES
 int valeur_couleur[7] = {2, 2, 2, 3, 3, 4, 5};                     // La valeur des couleurs = au nombre de cartes
@@ -430,7 +432,11 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
 {
     /*Simule un coup et renvoie son score pour le coup simulé joué*/
     // INITIALISATION
-    D_FLOAT *res = init_d_float();
+    printf("OK1\n");
+    fflush(stdout);
+    D_FLOAT *res = init_d_float(donnes);
+    printf("OK2\n");
+    fflush(stdout);
     int nb_mon_cote = 8;
     int nb_cote_adv = 8;
     int nb_total = nb_cartes + nb_restantes;
@@ -449,7 +455,6 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
     }
     marq *mon_cote = init_marqueur(nb_mon_cote, nb_total, total);
     marq *defausse;
-
     // Distribution des cartes
     while (mon_cote->pointeurs != NULL)
     {
@@ -475,6 +480,8 @@ float simulation_coup(int nb_cartes, int *cartes, int nb_restantes, int *restant
                 {
                     cartes_adv[defausse->pointeurs[i]] -= 1;
                 }
+                printf("Ajout\n");
+                fflush(stdout);
                 ajout(res, cartes_moi, cartes_adv, g.etat->avantage, mon_cote->n, mon_cote->k, mon_cote->cartes, mon_cote->pointeurs, defausse->n, defausse->k, defausse->cartes, defausse->pointeurs); // On calcule le score de cette fin de partie
                 for (int i = 0; i < defausse->k; i++)
                 {
@@ -526,6 +533,7 @@ void init_jeu(void)
     {
         adv = 0;
     }
+    donnes = creation("stats_cartes_doub.txt");
     printf("Fin de l'initialisation du tour : %ld\n\n", currenttime() - t1);
 }
 
@@ -576,6 +584,8 @@ void jouer_tour(void)
         tour_simu = init_marqueur(1, g.en_main, g.cartes);
         while (tour_simu->pointeurs != NULL)
         {
+            printf("Tour suivant\n");
+            fflush(stdout);
             cartes_simu[tour_simu->pointeurs[0]] -= 1;
             etat_simu->valide_moi[tour_simu->pointeurs[0]] += 1;
             res = simulation_coup(tour_simu->n - tour_simu->k, cartes_simu, g.nb_restantes, g.restantes, g.act_poss[1], etat_simu, act_poss_simu);
@@ -594,6 +604,7 @@ void jouer_tour(void)
         act_poss_simu[0] = true;
     }
     printf("Fin simu valider\n");
+    fflush(stdout);
 
     // DEFAUSSER UNE CARTE
     if (g.act_poss[1])

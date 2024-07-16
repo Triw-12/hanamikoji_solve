@@ -24,13 +24,14 @@ int *delin(int i)
 
 SIX ***creation(char *nom)
 {
+    printf("Recuperation des donnes\n");
+    fflush(stdout);
     int j;
     SIX ***res_s = malloc(20 * sizeof(SIX **));
     assert(res_s != NULL);
     SIX base = {.s = -1, .d = -1, .t = -1, .q4 = -1, .q5 = -1, .prob = -1};
     for (int i = 0; i < 20; i++)
     {
-        printf("%d\n", i);
         j = (1920 * (i + 1) + 240 * 8 + 30 * 8 + 6 * 5 + 2 * 3 + 2);
         res_s[i] = malloc(j * sizeof(SIX *));
         assert(res_s[i] != NULL);
@@ -44,6 +45,8 @@ SIX ***creation(char *nom)
             }
         }
     }
+    printf("Fin de creation\n");
+    fflush(stdout);
     SIX en_place;
     FILE *fichier = fopen(nom, "r");
     int nb, nb_f, cpt, ind;
@@ -55,6 +58,7 @@ SIX ***creation(char *nom)
     printf("%d\n", nb);
     for (int i = 0; i < nb; i++)
     {
+        //printf("%d\n",i);
         for (int j = 0; j < 7; j++)
         {
             fscanf(fichier, "%d", &init[j]);
@@ -68,8 +72,8 @@ SIX ***creation(char *nom)
             nb_f_max = nb_f;
         }
         ind = lin(init[1], init[2], init[3], init[4], init[5], init[6]);
-        printf("Init : %d %d %d %d %d %d %d\n", init[0], init[1], init[2], init[3], init[4], init[5], init[6]);
-        printf("Ind : %d\n", ind);
+        //printf("Init : %d %d %d %d %d %d %d\n", init[0], init[1], init[2], init[3], init[4], init[5], init[6]);
+        //printf("Ind : %d\n", ind);
         cpt = 0;
         for (int j = 0; j < nb_f; j++)
         {
@@ -84,28 +88,41 @@ SIX ***creation(char *nom)
             en_place.q4 = res[3];
             en_place.q5 = res[4];
             en_place.prob = res[5];
-            printf("Res : %d %d %d %d %d %d %d\n", res[0], res[1], res[2], res[3], res[4], res[5], cpt);
+            //printf("Res : %d %d %d %d %d %d %d\n", res[0], res[1], res[2], res[3], res[4], res[5], cpt);
             res_s[init[0] - 1][ind][cpt++] = en_place;
-            printf("OK\n");
+            //printf("OK\n");
         }
     }
     // printf("%d\n", nb_f_max);
+    printf("Fin des recuperation des donnes\n");
+    fflush(stdout);
     return res_s;
 }
 
 int proba(SIX ***tab, int n, int k, SIX debut, SIX arrive)
 {
     int ind = lin(k, debut.s, debut.d, debut.t, debut.q4, debut.q5);
+    printf("Debut proba %d %d %d %d %d %d %d %d\n",n,k, debut.s, debut.d, debut.t, debut.q4, debut.q5,ind);
+    printf("Arrive : %d %d %d %d %d\n",arrive.s, arrive.d, arrive.t, arrive.q4, arrive.q5);
+    fflush(stdout);
     SIX val;
     for (int i = 0; i < N_MAX; i++)
     {
+        printf("OK %d\n",i);
+        fflush(stdout);
         val = tab[n][ind][i];
+        printf("VAL : %d %d %d %d %d\n",val.s, val.d, val.t, val.q4, val.q5);
+        fflush(stdout);
         assert(val.s != -1);
         if (val.s == arrive.s && val.d == arrive.d && val.t == arrive.t && val.q4 == arrive.q4 && val.q5 == arrive.q5)
         {
+            printf("Val_prob = %d",val.prob);
+            fflush(stdout);
             return val.prob;
         }
     }
+    assert(false);
+    return 0;
 }
 
 void free_six(SIX ***s)
@@ -123,6 +140,7 @@ void free_six(SIX ***s)
     free(s);
 }
 
+/*
 int main()
 {
     int t1 = time(NULL);
@@ -132,3 +150,4 @@ int main()
     printf("Temps : %d\n", t2 - t1);
     return 0;
 }
+*/
