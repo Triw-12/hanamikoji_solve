@@ -50,10 +50,6 @@ Problématique : Peut-t-on trouver une stratégie optimale pour jouer au jeu de 
 * 2 paquets de cartes identiques : semble meilleur sans cette fonctionnalité, car facile pour l'adversaire de la déjouer (exemple pour validation de 4 cartes de valeur 5)
 * Ne valider que le maximum (pour l'action 1) est limitant puisque parfois, on peut gagner beaucoup de points  
 
-### Conclusion partielle
-
-A COMPLETER
-
 ## Algo nombres de combinaisons
 
 ### But

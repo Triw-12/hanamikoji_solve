@@ -1,6 +1,0 @@
-fichier = open("save_graphe.txt","r")
-# fichier.write(str(10000) + "\n")
-# fichier.write(str(1000000))
-a = fichier.readline()
-print(a.strip())
-fichier.close()
